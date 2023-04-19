@@ -7,4 +7,25 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\Icons\customer.png" />
+    <None Remove="Resources\Icons\missing.png" />
+    <None Remove="Resources\Icons\movie.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\" />
+    <Folder Include="ViewModel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\customer.png" />
+    <Resource Include="Resources\Icons\missing.png" />
+    <Resource Include="Resources\Icons\movie.png" />
+  </ItemGroup>
+
 </Project>
