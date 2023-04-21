@@ -3,11 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MovieRental.ViewModel"
         mc:Ignorable="d"
         Title="Movie Info"
         WindowStartupLocation="CenterOwner"
         SizeToContent="Height"
         MinWidth="500" MinHeight="220" Width="500">
+    <Window.DataContext>
+        <local:MovieViewModel x:Name="ViewModel" />
+    </Window.DataContext>
     <Window.Resources>
         <Style TargetType="{x:Type StackPanel}">
             <Setter Property="Margin" Value="5,2"/>
@@ -42,16 +46,16 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel>
                     <Label Target="{Binding ElementName=txtId}" Content="ID"/>
-                    <TextBox x:Name="txtId" IsEnabled="False" Width="40" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="txtId" Text="{Binding Id}" IsEnabled="False" Width="40" HorizontalAlignment="Left"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
                     <Label Target="{Binding ElementName=txtTitle}" Content="_Title"/>
-                    <TextBox x:Name="txtTitle"/>
+                    <TextBox x:Name="txtTitle" Text="{Binding Title}"/>
                 </StackPanel>
             </Grid>
             <StackPanel>
-                <Label Target="{Binding ElementName=txtId}" Content="_Genre"/>
-                <TextBox x:Name="txtGenre"/>
+                <Label Target="{Binding ElementName=txtGenre}" Content="_Genre"/>
+                <TextBox x:Name="txtGenre" Text="{Binding Genre}"/>
             </StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -60,25 +64,25 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel>
                     <Label Target="{Binding ElementName=txtYear}" Content="_Year"/>
-                    <TextBox x:Name="txtYear"/>
+                    <TextBox x:Name="txtYear" Text="{Binding Year}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
                     <Label Target="{Binding ElementName=txtCopies}" Content="_Copies"/>
-                    <TextBox x:Name="txtCopies"/>
+                    <TextBox x:Name="txtCopies" Text="{Binding Copies}"/>
                 </StackPanel>
             </Grid>
         </StackPanel>
         <StackPanel Grid.Column="1">
             <Label Target="{Binding ElementName=txtPlot}" Content="_Plot"/>
-            <TextBox x:Name="txtPlot" Height="125" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+            <TextBox x:Name="txtPlot" Text="{Binding Plot}" Height="125" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
         </StackPanel>
         <Grid Grid.ColumnSpan="2" Grid.Row="1" Margin="0,20,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button x:Name="btnDelete" Content="Delete" Click="btnDelete_Click" Visibility="Hidden"/>
+                <Button x:Name="btnDelete" Content="Delete" Command="{Binding DeleteMovie}" Visibility="Hidden"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="btnCancel" Content="Cancel" Click="btnCancel_Click"/>
-                <Button x:Name="btnSave" Content="Save" Click="btnSave_Click" Margin="10,0,0,0"/>
+                <Button x:Name="btnCancel" Content="Cancel" IsCancel="True"/>
+                <Button x:Name="btnSave" Content="Save" Command="{Binding UpdateMovie}" Margin="10,0,0,0"/>
             </StackPanel>
         </Grid>
     </Grid>
