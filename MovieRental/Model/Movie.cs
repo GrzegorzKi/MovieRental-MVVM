@@ -1,8 +1,12 @@
-using System.Net;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MovieRental.Model;
 
-public class MovieModel {
+[Table("Movie")]
+public class Movie {
+    [Key]
     public int? Id { get; set; }
     public string Title { get; set; }
     public string Year { get; set; }
@@ -10,13 +14,16 @@ public class MovieModel {
     public string Plot { get; set; }
     public int Copies { get; set; }
 
-    public MovieModel()
+    [Timestamp]
+    public Byte[]? RowVersion { get; set; }
+
+    public Movie()
         : this(null, "", "", "", "", 1) { }
 
-    public MovieModel(string title, string year, string genre, string plot, int copies)
+    public Movie(string title, string year, string genre, string plot, int copies)
         : this(null, title, year, genre, plot, copies) { }
 
-    public MovieModel(int? id, string title, string year, string genre, string plot, int copies) {
+    public Movie(int? id, string title, string year, string genre, string plot, int copies) {
         Id = id;
         Title = title;
         Year = year;
@@ -25,7 +32,7 @@ public class MovieModel {
         Copies = copies;
     }
 
-    public MovieModel(MovieModel copy) {
+    public Movie(Movie copy) {
         Id = copy.Id;
         Title = copy.Title;
         Year = copy.Year;

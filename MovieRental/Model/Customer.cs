@@ -1,23 +1,28 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace MovieRental.Model;
 
-public class CustomerModel {
+[Table("Customer")]
+public class Customer {
+    [Key]
     public int? Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Address { get; set; }
     public string Phone { get; set; }
 
-    public string FullName {
-        get => $"{FirstName} {LastName}";
-    }
+    [Timestamp]
+    public Byte[]? RowVersion { get; set; }
 
-    public CustomerModel()
+    public Customer()
         : this(null, "", "", "", "") { }
 
-    public CustomerModel(string firstName, string lastName, string address, string phone)
+    public Customer(string firstName, string lastName, string address, string phone)
         : this(null, firstName, lastName, address, phone) { }
 
-    public CustomerModel(int? id, string firstName, string lastName, string address, string phone) {
+    public Customer(int? id, string firstName, string lastName, string address, string phone) {
         Id = id;
         FirstName = firstName;
         LastName = lastName;
@@ -25,7 +30,7 @@ public class CustomerModel {
         Phone = phone;
     }
 
-    public CustomerModel(CustomerModel copy) {
+    public Customer(Customer copy) {
         Id = copy.Id;
         FirstName = copy.FirstName;
         LastName = copy.LastName;
