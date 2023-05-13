@@ -9,7 +9,7 @@ namespace MovieRental.ViewModel;
 public class MovieViewModel : ViewModelBase {
     private readonly IDialogService _dialogService;
 
-    protected MovieModel _movieModel;
+    protected Movie _movieModel;
 
     public event Action? UpdateMovieCompleted;
 
@@ -22,14 +22,25 @@ public class MovieViewModel : ViewModelBase {
     public MovieViewModel() {
         // TODO Might want to use IoC solution for that
         _dialogService = new DialogService();
-        _movieModel = new MovieModel();
+        _movieModel = new Movie();
+    }
+
+    public MovieViewModel(Movie movieModel) {
+        // TODO Might want to use IoC solution for that
+        _dialogService = new DialogService();
+        _movieModel = movieModel;
     }
 
     internal void UpdateMovieExecute() {
         if (Id == null) {
-            // TODO Insert model into database
+            MainWindow._context.Movies.Add(_movieModel);
+            MainWindow._context.SaveChanges();
         } else {
-            // TODO Update model in database
+            var movie = MainWindow._context.Movies.Find(_movieModel.Id);
+            if (movie == null)
+                return;
+            MainWindow._context.Entry(movie).CurrentValues.SetValues(_movieModel);
+            MainWindow._context.SaveChanges();
         }
         UpdateMovieCompleted?.Invoke();
     }
@@ -40,7 +51,11 @@ public class MovieViewModel : ViewModelBase {
 
     internal void DeleteMovieExecute() {
         if (_dialogService.Confirm($"Delete movie {Title}?")) {
-            // TODO Delete model in database
+            var movie = MainWindow._context.Movies.Find(_movieModel.Id);
+            if (movie == null)
+                return;
+            MainWindow._context.Movies.Remove(movie);
+            MainWindow._context.SaveChanges();
             UpdateMovieCompleted?.Invoke();
         }
     }
@@ -50,7 +65,7 @@ public class MovieViewModel : ViewModelBase {
     }
 
 
-    public MovieModel MovieModel {
+    public Movie MovieModel {
         get => _movieModel;
         set => SetProperty(ref _movieModel, value);
     }

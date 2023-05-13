@@ -2,6 +2,7 @@ using MovieRental.Commands;
 using MovieRental.Model;
 using MovieRental.View.Dialogs;
 using System;
+using System.Linq;
 using System.Windows.Input;
 
 namespace MovieRental.ViewModel;
@@ -9,7 +10,7 @@ namespace MovieRental.ViewModel;
 public class CustomerViewModel : ViewModelBase {
     private readonly IDialogService _dialogService;
 
-    protected CustomerModel _customerModel;
+    protected Customer _customerModel;
 
     public event Action? UpdateCustomerCompleted;
 
@@ -22,14 +23,25 @@ public class CustomerViewModel : ViewModelBase {
     public CustomerViewModel() {
         // TODO Might want to use IoC solution for that
         _dialogService = new DialogService();
-        _customerModel = new CustomerModel();
+        _customerModel = new Customer();
+    }
+
+    public CustomerViewModel(Customer customerModel) {
+        // TODO Might want to use IoC solution for that
+        _dialogService = new DialogService();
+        _customerModel = customerModel;
     }
 
     internal void UpdateCustomerExecute() {
         if (Id == null) {
-            // TODO Insert model into database
+            MainWindow._context.Customers.Add(_customerModel);
+            MainWindow._context.SaveChanges();
         } else {
-            // TODO Update model in database
+            var customer = MainWindow._context.Customers.Find(_customerModel.Id);
+            if (customer == null)
+                return;
+            MainWindow._context.Entry(customer).CurrentValues.SetValues(_customerModel);
+            MainWindow._context.SaveChanges();
         }
         UpdateCustomerCompleted?.Invoke();
     }
@@ -40,7 +52,11 @@ public class CustomerViewModel : ViewModelBase {
 
     internal void DeleteCustomerExecute() {
         if (_dialogService.Confirm($"Delete customer {FirstName} {LastName}?")) {
-            // TODO Delete model in database
+            var customer = MainWindow._context.Customers.Find(_customerModel.Id);
+            if (customer == null)
+                return;
+            MainWindow._context.Customers.Remove(customer);
+            MainWindow._context.SaveChanges();
             UpdateCustomerCompleted?.Invoke();
         }
     }
@@ -50,7 +66,7 @@ public class CustomerViewModel : ViewModelBase {
     }
 
 
-    public CustomerModel CustomerModel {
+    public Customer CustomerModel {
         get => _customerModel;
         set => SetProperty(ref _customerModel, value);
     }
