@@ -4,8 +4,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MovieRental.View"
-             mc:Ignorable="d">
+             xmlns:vm="clr-namespace:MovieRental.ViewModel"
+             mc:Ignorable="d"
+             d:DesignWidth="800" d:DesignHeight="400" d:Background="White">
+    <UserControl.DataContext>
+        <vm:MovieColletionViewModel x:Name="ViewModel" />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <DataTemplate x:Key="MovieModelNameTemplate">
+            <Grid Height="Auto" Width="Auto" Margin="0,15">
+                <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Stretch">
+                    <TextBlock x:Name="Title" Text="{Binding Title}" MinHeight="12" MinWidth="20" FontSize="14" FontWeight="Normal"/>
+                    <TextBlock x:Name="perenthL" TextWrapping="Wrap" Text="(" Margin="5,0,0,0" FontWeight="Normal" FontStyle="Italic" FontSize="14"/>
+                    <TextBlock x:Name="Year" Text="{Binding Year}" MinHeight="12" MinWidth="20" Margin="0" FontSize="14" FontStyle="Italic" FontWeight="Normal"/>
+                    <TextBlock x:Name="perenthR" TextWrapping="Wrap" Text=")" Margin="0" FontWeight="Normal" FontStyle="Italic" FontSize="14"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        <Style x:Key="ItemStyle" TargetType="ListBoxItem">
+            <EventSetter Event="MouseDoubleClick" Handler="EditMovie"/>
+            <EventSetter Event="KeyDown" Handler="OnKeyEnterEditMovie"/>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-
+        <ListBox ItemTemplate="{DynamicResource MovieModelNameTemplate}"
+                 ItemsSource="{Binding MovieList, Mode=OneWay}"
+                 ItemContainerStyle="{StaticResource ItemStyle}"
+                 SelectedItem="{Binding SelectedMovie, Mode=TwoWay, UpdateSourceTrigger=Default}"
+                 SelectedIndex="0"/>
     </Grid>
 </UserControl>

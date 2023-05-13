@@ -1,22 +1,33 @@
 using MovieRental.Model;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace MovieRental.View.Modals;
 
-public partial class EditCustomerWindow : Window {
+public partial class EditCustomerWindow {
 
-    public EditCustomerWindow(CustomerModel? customer = null) {
+    public EditCustomerWindow(Customer? customer = null) {
         InitializeComponent();
 
         if (customer != null) {
             Title = "Edit customer";
             btnDelete.Visibility = Visibility.Visible;
 
-            ViewModel.CustomerModel = new CustomerModel(customer);
+            ViewModel.CustomerModel = new Customer(customer);
+            // ViewModel.Id = ViewModel.CustomerModel.Id;
         } else {
             Title = "Add customer";
         }
 
-        ViewModel.UpdateCustomerCompleted += Close;
+        ViewModel.UpdateCustomerCompleted += OnClose;
+    }
+
+    private void OnClose() {
+        if (ComponentDispatcher.IsThreadModal) {
+            try {
+                DialogResult = true;
+            } catch { /* Actually is in non-modal mode - ignore exception */ }
+        }
+        Close();
     }
 }

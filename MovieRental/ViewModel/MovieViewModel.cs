@@ -67,7 +67,11 @@ public class MovieViewModel : ViewModelBase {
 
     public Movie MovieModel {
         get => _movieModel;
-        set => SetProperty(ref _movieModel, value);
+        set {
+            SetProperty(ref _movieModel, value);
+            // Trigger change on all properties (see docs for details)
+            OnPropertyChanged(string.Empty);
+        }
     }
 
     public int? Id {

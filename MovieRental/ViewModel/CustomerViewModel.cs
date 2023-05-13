@@ -68,7 +68,11 @@ public class CustomerViewModel : ViewModelBase {
 
     public Customer CustomerModel {
         get => _customerModel;
-        set => SetProperty(ref _customerModel, value);
+        set {
+            SetProperty(ref _customerModel, value);
+            // Trigger change on all properties (see docs for details)
+            OnPropertyChanged(string.Empty);
+        }
     }
 
     public int? Id {
