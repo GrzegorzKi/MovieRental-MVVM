@@ -18,7 +18,7 @@ public class Movie {
     public virtual ICollection<RentedMovie> RentedMovies { get; } = new List<RentedMovie>();
 
     [Timestamp]
-    public Byte[]? RowVersion { get; set; }
+    public long? RowVersion { get; set; }
 
     public Movie()
         : this(null, "", "", "", "", 1) { }
