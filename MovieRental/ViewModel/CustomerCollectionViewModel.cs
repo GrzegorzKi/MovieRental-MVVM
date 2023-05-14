@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MovieRental.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,8 +20,10 @@ public class CustomerCollectionViewModel : ViewModelBase {
     }
 
     public CustomerCollectionViewModel() {
-        _customerList = new ObservableCollection<CustomerViewModel>(MainWindow._context.Customers
-            .Select(e => new CustomerViewModel(e)));
+        using var context = new AppDbContext();
+
+        var collection = context.Customers.Select(e => new CustomerViewModel(e));
+        _customerList = new ObservableCollection<CustomerViewModel>(collection);
     }
 
     internal CustomerCollectionViewModel(IEnumerable<Customer> customers) {
@@ -28,7 +31,9 @@ public class CustomerCollectionViewModel : ViewModelBase {
     }
 
     public void refreshCustomerList() {
-        CustomerList = new ObservableCollection<CustomerViewModel>(MainWindow._context.Customers
-            .Select(e => new CustomerViewModel(e)));
+        using var context = new AppDbContext();
+
+        var collection = context.Customers.Select(e => new CustomerViewModel(e));
+        CustomerList = new ObservableCollection<CustomerViewModel>(collection);
     }
 }

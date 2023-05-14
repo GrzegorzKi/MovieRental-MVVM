@@ -2,7 +2,6 @@ using MovieRental.Commands;
 using MovieRental.Model;
 using MovieRental.View.Dialogs;
 using System;
-using System.Linq;
 using System.Windows.Input;
 
 namespace MovieRental.ViewModel;
@@ -33,15 +32,17 @@ public class CustomerViewModel : ViewModelBase {
     }
 
     internal void UpdateCustomerExecute() {
+        using var context = new AppDbContext();
+
         if (Id == null) {
-            MainWindow._context.Customers.Add(_customerModel);
-            MainWindow._context.SaveChanges();
+            context.Customers.Add(_customerModel);
+            context.SaveChanges();
         } else {
-            var customer = MainWindow._context.Customers.Find(_customerModel.Id);
+            var customer = context.Customers.Find(_customerModel.Id);
             if (customer == null)
                 return;
-            MainWindow._context.Entry(customer).CurrentValues.SetValues(_customerModel);
-            MainWindow._context.SaveChanges();
+            context.Entry(customer).CurrentValues.SetValues(_customerModel);
+            context.SaveChanges();
         }
         UpdateCustomerCompleted?.Invoke();
     }
@@ -52,11 +53,13 @@ public class CustomerViewModel : ViewModelBase {
 
     internal void DeleteCustomerExecute() {
         if (_dialogService.Confirm($"Delete customer {FirstName} {LastName}?")) {
-            var customer = MainWindow._context.Customers.Find(_customerModel.Id);
+            using var context = new AppDbContext();
+
+            var customer = context.Customers.Find(_customerModel.Id);
             if (customer == null)
                 return;
-            MainWindow._context.Customers.Remove(customer);
-            MainWindow._context.SaveChanges();
+            context.Customers.Remove(customer);
+            context.SaveChanges();
             UpdateCustomerCompleted?.Invoke();
         }
     }

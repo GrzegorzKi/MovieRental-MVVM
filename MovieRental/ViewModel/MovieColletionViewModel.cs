@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MovieRental.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,8 +20,10 @@ public class MovieColletionViewModel : ViewModelBase {
     }
 
     public MovieColletionViewModel() {
-        _movieList = new ObservableCollection<MovieViewModel>(MainWindow._context.Movies
-            .Select(e => new MovieViewModel(e)));
+        using var context = new AppDbContext();
+
+        var collection = context.Movies.Select(e => new MovieViewModel(e));
+        _movieList = new ObservableCollection<MovieViewModel>(collection);
     }
 
     internal MovieColletionViewModel(IEnumerable<Movie> movies) {
@@ -34,7 +37,9 @@ public class MovieColletionViewModel : ViewModelBase {
         // the whole collection (e.g. with Dispatcher)
         // See: https://stackoverflow.com/a/17996744
         //
-        MovieList = new ObservableCollection<MovieViewModel>(MainWindow._context.Movies
-            .Select(e => new MovieViewModel(e)));
+        using var context = new AppDbContext();
+
+        var collection = context.Movies.Select(e => new MovieViewModel(e));
+        MovieList = new ObservableCollection<MovieViewModel>(collection);
     }
 }
