@@ -5,18 +5,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MovieRental.View"
              xmlns:vm="clr-namespace:MovieRental.ViewModel"
+             xmlns:dvm="clr-namespace:MovieRental.DesignTimeViewModel"
              mc:Ignorable="d"
-             d:DesignWidth="800" d:DesignHeight="400" d:Background="White">
+             d:DesignWidth="800" d:DesignHeight="400" d:Background="White"
+             d:DataContext ="{d:DesignInstance {x:Type dvm:SampleCustomerCollectionViewModel}, IsDesignTimeCreatable=True}">
     <UserControl.DataContext>
         <vm:CustomerCollectionViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <DataTemplate x:Key="CustomerModelNameTemplate">
+        <DataTemplate x:Key="CustomerModelNameTemplate" DataType="ListBoxItem">
             <Grid Height="Auto" Width="Auto" Margin="0,15">
                 <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Stretch">
-                    <TextBlock x:Name="FirstName" Text="{Binding FirstName}" MinHeight="12" MinWidth="20" FontSize="14" FontWeight="Normal"/>
-                    <TextBlock x:Name="Space1" Text=" " MinHeight="12" MinWidth="20" FontSize="14" FontWeight="Normal"/>
-                    <TextBlock x:Name="LastName" Text="{Binding LastName}" MinHeight="12" MinWidth="20" FontSize="14" FontWeight="Normal"/>
+                    <TextBlock x:Name="FirstName" MinHeight="12" FontSize="14" FontWeight="Normal">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} {1}">
+                                <Binding Path="FirstName" />
+                                <Binding Path="LastName" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -27,11 +34,11 @@
     </UserControl.Resources>
     <Grid>
         <StackPanel>
-            <ListBox ItemTemplate="{DynamicResource CustomerModelNameTemplate}"
-                ItemsSource="{Binding CustomerList, Mode=OneWay}"
-                ItemContainerStyle="{StaticResource ItemStyle}"
-                SelectedItem="{Binding SelectedCustomer, Mode=TwoWay, UpdateSourceTrigger=Default}"
-                SelectedIndex="0">
+            <ListBox ItemsSource="{Binding CustomerList, Mode=OneWay}"
+                     SelectedItem="{Binding SelectedCustomer, Mode=TwoWay, UpdateSourceTrigger=Default}"
+                     SelectedIndex="0"
+                     ItemTemplate="{DynamicResource CustomerModelNameTemplate}"
+                     ItemContainerStyle="{StaticResource ItemStyle}">
             </ListBox>
             <Button Content="Show Customer Edit Modal" HorizontalAlignment="Center" Click="AddCustomer" />
         </StackPanel>
