@@ -2,6 +2,8 @@ using MovieRental.Commands;
 using MovieRental.Model;
 using MovieRental.View.Dialogs;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace MovieRental.ViewModel;
@@ -10,6 +12,7 @@ public class CustomerViewModel : ViewModelBase {
     private readonly IDialogService _dialogService;
 
     protected Customer _customerModel;
+    protected ObservableCollection<RentedMovieViewModel> _rentedMovies;
 
     public event Action? UpdateCustomerCompleted;
 
@@ -23,12 +26,14 @@ public class CustomerViewModel : ViewModelBase {
         // TODO Might want to use IoC solution for that
         _dialogService = new DialogService();
         _customerModel = new Customer();
+        _rentedMovies = new ObservableCollection<RentedMovieViewModel>();
     }
 
     public CustomerViewModel(Customer customerModel) {
         // TODO Might want to use IoC solution for that
         _dialogService = new DialogService();
         _customerModel = customerModel;
+        _rentedMovies = new ObservableCollection<RentedMovieViewModel>(customerModel.RentedMovies.Select(e => new RentedMovieViewModel(e)));
     }
 
     internal void UpdateCustomerExecute() {
@@ -72,10 +77,17 @@ public class CustomerViewModel : ViewModelBase {
     public Customer CustomerModel {
         get => _customerModel;
         set {
-            SetProperty(ref _customerModel, value);
-            // Trigger change on all properties (see docs for details)
-            OnPropertyChanged(string.Empty);
+            if (SetProperty(ref _customerModel, value)) {
+                _rentedMovies = new ObservableCollection<RentedMovieViewModel>(_customerModel.RentedMovies.Select(e => new RentedMovieViewModel(e)));
+                // Trigger change on all properties
+                OnPropertyChanged(string.Empty);
+            }
         }
+    }
+
+    public ObservableCollection<RentedMovieViewModel> RentedMovies {
+        get => _rentedMovies;
+        set => SetProperty(ref _rentedMovies, value);
     }
 
     public int? Id {

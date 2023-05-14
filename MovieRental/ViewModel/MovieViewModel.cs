@@ -2,6 +2,8 @@ using MovieRental.Commands;
 using MovieRental.Model;
 using MovieRental.View.Dialogs;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace MovieRental.ViewModel;
@@ -10,6 +12,7 @@ public class MovieViewModel : ViewModelBase {
     private readonly IDialogService _dialogService;
 
     protected Movie _movieModel;
+    protected ObservableCollection<RentedMovieViewModel> _rentedMovies;
 
     public event Action? UpdateMovieCompleted;
 
@@ -23,12 +26,14 @@ public class MovieViewModel : ViewModelBase {
         // TODO Might want to use IoC solution for that
         _dialogService = new DialogService();
         _movieModel = new Movie();
+        _rentedMovies = new ObservableCollection<RentedMovieViewModel>();
     }
 
     public MovieViewModel(Movie movieModel) {
         // TODO Might want to use IoC solution for that
         _dialogService = new DialogService();
         _movieModel = movieModel;
+        _rentedMovies = new ObservableCollection<RentedMovieViewModel>(movieModel.RentedMovies.Select(e => new RentedMovieViewModel(e)));
     }
 
     internal void UpdateMovieExecute() {
@@ -72,10 +77,17 @@ public class MovieViewModel : ViewModelBase {
     public Movie MovieModel {
         get => _movieModel;
         set {
-            SetProperty(ref _movieModel, value);
-            // Trigger change on all properties (see docs for details)
-            OnPropertyChanged(string.Empty);
+            if (SetProperty(ref _movieModel, value)) {
+                _rentedMovies = new ObservableCollection<RentedMovieViewModel>(_movieModel.RentedMovies.Select(e => new RentedMovieViewModel(e)));
+                // Trigger change on all properties
+                OnPropertyChanged(string.Empty);
+            }
         }
+    }
+
+    public ObservableCollection<RentedMovieViewModel> RentedMovies {
+        get => _rentedMovies;
+        set => SetProperty(ref _rentedMovies, value);
     }
 
     public int? Id {
