@@ -46,8 +46,7 @@
                     Margin="0,0,5,0"/>
             <Button Content="Issue Movie"
                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectMovieToIssue}"
-                    CommandParameter="{Binding SelectedMovie}"
-                    ToolTipService.ShowOnDisabled="True">
+                    CommandParameter="{Binding SelectedMovie}">
                 <Button.ToolTip>
                     <ToolTip>
                         <TextBlock Text="Customer has this movie rented, cannot rent another." />
