@@ -20,6 +20,14 @@ public class RentedMovieViewModel : ViewModelBase {
         }
     }
 
+    public int MovieId {
+        get => _rentedMovieModel.MovieId;
+    }
+
+    public int CustomerId {
+        get => _rentedMovieModel.CustomerId;
+    }
+
     public string FirstName {
         get => _rentedMovieModel.Customer.FirstName;
     }

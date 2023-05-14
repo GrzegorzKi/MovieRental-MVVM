@@ -1,6 +1,5 @@
 using MovieRental.Commands;
 using MovieRental.Model;
-using MovieRental.View;
 using MovieRental.View.Dialogs;
 using System;
 using System.Linq;
@@ -15,13 +14,11 @@ public class MainWindowViewModel : ViewModelBase {
 
     private ICommand? _selectCustomerToIssue;
     public ICommand SelectCustomerToIssue => _selectCustomerToIssue ??=
-        new RelayCommand<CustomerViewModel>(SelectCustomerToIssueExecute,
-            (e) => MovieToIssue == null || (e != null && e.RentedMovies.All((rm) => !rm.RentedMovieModel.MovieId.Equals(MovieToIssue.Id))));
+        new RelayCommand<CustomerViewModel>(SelectCustomerToIssueExecute, CanSelectCustomerToIssue);
 
     private ICommand? _selectMovieToIssue;
     public ICommand SelectMovieToIssue => _selectMovieToIssue ??=
-        new RelayCommand<MovieViewModel>(SelectMovieToIssueTabExecute,
-            (e) => CustomerToIssue == null || (e != null && e.RentedMovies.All((rm) => !rm.RentedMovieModel.CustomerId.Equals(CustomerToIssue.Id))));
+        new RelayCommand<MovieViewModel>(SelectMovieToIssueTabExecute, CanSelectMovieToIssue);
 
     private ICommand? _findCustomerInList;
     public ICommand FindCustomerInList => _findCustomerInList ??=
@@ -60,6 +57,11 @@ public class MainWindowViewModel : ViewModelBase {
         }
     }
 
+    internal bool CanSelectCustomerToIssue(CustomerViewModel? e) {
+        return MovieToIssue == null ||
+            (e != null && e.RentedMovies.All((rm) => !rm.MovieId.Equals(MovieToIssue.Id)));
+    }
+
     internal void SelectMovieToIssueTabExecute(MovieViewModel? movieVM) {
         if (movieVM != null) {
             MovieToIssue = movieVM;
@@ -70,6 +72,11 @@ public class MainWindowViewModel : ViewModelBase {
                 CustomerTabSwitchRequested?.Invoke(null);
             }
         }
+    }
+
+    internal bool CanSelectMovieToIssue(MovieViewModel? e) {
+        return CustomerToIssue == null ||
+            (e != null && e.RentedMovies.All((rm) => !rm.CustomerId.Equals(CustomerToIssue.Id)));
     }
 
     internal void IssueMovieToCustomer() {
