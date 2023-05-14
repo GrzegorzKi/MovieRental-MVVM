@@ -11,7 +11,7 @@ public partial class MoviesView : UserControl {
     }
 
     private void AddMovie(object sender, RoutedEventArgs e) {
-        var editModal = new EditCustomerWindow() {
+        var editModal = new EditMovieWindow() {
             Owner = Window.GetWindow(this)
         };
 

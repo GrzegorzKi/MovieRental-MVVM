@@ -29,10 +29,21 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ListBox ItemTemplate="{DynamicResource MovieModelNameTemplate}"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <ListBox x:Name="MoviesListBox"
+                 ItemTemplate="{DynamicResource MovieModelNameTemplate}"
                  ItemsSource="{Binding MovieList, Mode=OneWay}"
                  ItemContainerStyle="{StaticResource ItemStyle}"
                  SelectedItem="{Binding SelectedMovie, Mode=TwoWay, UpdateSourceTrigger=Default}"
                  SelectedIndex="0"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1">
+            <Button Content="Show Movie Edit Modal" Click="AddMovie" Margin="0,0,5,0" />
+            <Button Content="Move into Customer tab"
+                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SwitchToCustomerTab}"/>
+            <!-- CommandParameter="" -->
+        </StackPanel>
     </Grid>
 </UserControl>

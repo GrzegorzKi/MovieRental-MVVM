@@ -7,7 +7,8 @@
         xmlns:uc="clr-namespace:MovieRental.View.Controls"
         xmlns:view="clr-namespace:MovieRental.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
         <Style TargetType="TabItem">
             <Setter Property="FontSize" Value="14" />
@@ -24,7 +25,7 @@
                         <TextBlock Margin="5,0,0,0">Movies</TextBlock>
                     </StackPanel>
                 </TabItem.Header>
-                <view:MoviesView />
+                <view:MoviesView  x:Name="MoviesView" />
             </TabItem>
             <TabItem x:Name="CustomersTab">
                 <TabItem.Header>
@@ -33,7 +34,7 @@
                         <TextBlock Margin="5,0,0,0">Customers</TextBlock>
                     </StackPanel>
                 </TabItem.Header>
-                <view:CustomersView />
+                <view:CustomersView x:Name="CustomersView" />
             </TabItem>
             <TabItem x:Name="UnreturnedTab">
                 <TabItem.Header>
@@ -42,7 +43,7 @@
                         <TextBlock Margin="3,0,0,0">Unreturned</TextBlock>
                     </StackPanel>
                 </TabItem.Header>
-                <view:UnreturnedView />
+                <view:UnreturnedView x:Name="UnreturnedView" />
             </TabItem>
         </TabControl>
         <uc:MovieIssuePopupPanel x:Name="MovieIssuePopup" Text="Select customer to rent" Visibility="Hidden" />
