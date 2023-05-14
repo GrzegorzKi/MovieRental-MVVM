@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using MovieRental.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,9 +19,7 @@ public class MovieColletionViewModel : ViewModelBase {
     }
 
     public MovieColletionViewModel() {
-        using var context = new AppDbContext();
-
-        var collection = context.Movies.Select(e => new MovieViewModel(e));
+        var collection = DatabaseDao.GetMovieViewModels();
         _movieList = new ObservableCollection<MovieViewModel>(collection);
     }
 
@@ -30,16 +27,8 @@ public class MovieColletionViewModel : ViewModelBase {
         _movieList = new ObservableCollection<MovieViewModel>(movies.Select(e => new MovieViewModel(e)));
     }
 
-    public void refreshMovieList() {
-        //
-        // TODO: It would be advisable to modify collection itself
-        // in respond to database changes (add/update/remove) than refreshing
-        // the whole collection (e.g. with Dispatcher)
-        // See: https://stackoverflow.com/a/17996744
-        //
-        using var context = new AppDbContext();
-
-        var collection = context.Movies.Select(e => new MovieViewModel(e));
+    public async void RefreshMovieList() {
+        var collection = await DatabaseDao.GetMovieViewModelsAsync();
         MovieList = new ObservableCollection<MovieViewModel>(collection);
     }
 }

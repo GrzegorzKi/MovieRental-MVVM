@@ -37,18 +37,7 @@ public class CustomerViewModel : ViewModelBase {
     }
 
     internal void UpdateCustomerExecute() {
-        using var context = new AppDbContext();
-
-        if (Id == null) {
-            context.Customers.Add(_customerModel);
-            context.SaveChanges();
-        } else {
-            var customer = context.Customers.Find(_customerModel.Id);
-            if (customer == null)
-                return;
-            context.Entry(customer).CurrentValues.SetValues(_customerModel);
-            context.SaveChanges();
-        }
+        DatabaseDao.UpdateCustomer(CustomerModel);
         UpdateCustomerCompleted?.Invoke();
     }
 
@@ -58,13 +47,7 @@ public class CustomerViewModel : ViewModelBase {
 
     internal void DeleteCustomerExecute() {
         if (_dialogService.Confirm($"Delete customer {FirstName} {LastName}?")) {
-            using var context = new AppDbContext();
-
-            var customer = context.Customers.Find(_customerModel.Id);
-            if (customer == null)
-                return;
-            context.Customers.Remove(customer);
-            context.SaveChanges();
+            DatabaseDao.DeleteCustomer(CustomerModel);
             UpdateCustomerCompleted?.Invoke();
         }
     }
@@ -103,6 +86,7 @@ public class CustomerViewModel : ViewModelBase {
         set {
             _customerModel.FirstName = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(FullName));
         }
     }
 
@@ -111,7 +95,12 @@ public class CustomerViewModel : ViewModelBase {
         set {
             _customerModel.LastName = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(FullName));
         }
+    }
+
+    public string FullName {
+        get => _customerModel.FirstName + " " + _customerModel.LastName;
     }
 
     public string Address {

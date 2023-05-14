@@ -1,3 +1,4 @@
+using MovieRental.Model;
 using MovieRental.View.Modals;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +9,7 @@ namespace MovieRental.View;
 public partial class CustomersView : UserControl {
     public CustomersView() {
         InitializeComponent();
+        DatabaseDao.CustomersChanged += ViewModel.RefreshCustomerList;
     }
 
     private void AddCustomer(object sender, RoutedEventArgs e) {
@@ -15,9 +17,7 @@ public partial class CustomersView : UserControl {
             Owner = Window.GetWindow(this)
         };
 
-        if (editModal.ShowDialog() == true) {
-            ViewModel.refreshCustomerList();
-        }
+        editModal.ShowDialog();
     }
 
     private void OnKeyEnterEditCustomer(object sender, KeyEventArgs e) {
@@ -31,8 +31,6 @@ public partial class CustomersView : UserControl {
             Owner = Window.GetWindow(this)
         };
 
-        if (editModal.ShowDialog() == true) {
-            ViewModel.refreshCustomerList();
-        }
+        editModal.ShowDialog();
     }
 }

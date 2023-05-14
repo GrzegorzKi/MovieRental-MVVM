@@ -37,18 +37,7 @@ public class MovieViewModel : ViewModelBase {
     }
 
     internal void UpdateMovieExecute() {
-        using var context = new AppDbContext();
-
-        if (Id == null) {
-            context.Movies.Add(_movieModel);
-            context.SaveChanges();
-        } else {
-            var movie = context.Movies.Find(_movieModel.Id);
-            if (movie == null)
-                return;
-            context.Entry(movie).CurrentValues.SetValues(_movieModel);
-            context.SaveChanges();
-        }
+        DatabaseDao.UpdateMovie(MovieModel);
         UpdateMovieCompleted?.Invoke();
     }
 
@@ -58,13 +47,7 @@ public class MovieViewModel : ViewModelBase {
 
     internal void DeleteMovieExecute() {
         if (_dialogService.Confirm($"Delete movie {Title}?")) {
-            using var context = new AppDbContext();
-
-            var movie = context.Movies.Find(_movieModel.Id);
-            if (movie == null)
-                return;
-            context.Movies.Remove(movie);
-            context.SaveChanges();
+            DatabaseDao.DeleteMovie(MovieModel);
             UpdateMovieCompleted?.Invoke();
         }
     }

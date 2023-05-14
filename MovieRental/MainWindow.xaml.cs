@@ -1,22 +1,16 @@
-using MovieRental.Commands;
-using MovieRental.Model;
 using MovieRental.View;
 using MovieRental.ViewModel;
 using System.Windows;
-using System.Windows.Input;
 
 namespace MovieRental;
 
 public partial class MainWindow : Window {
 
-    private ICommand? _switchToCustomerTab;
-    public ICommand SwitchToCustomerTab => _switchToCustomerTab ??= new RelayCommand<CustomerViewModel>(SwitchToCustomerTabExecute);
-
-    private ICommand? _switchToMovieTab;
-    public ICommand SwitchToMovieTab => _switchToMovieTab ??= new RelayCommand<MovieViewModel>(SwitchToMovieTabExecute);
-
     public MainWindow() {
         InitializeComponent();
+        ViewModel.CustomerTabSwitchRequested += SwitchToCustomerTabExecute;
+        ViewModel.MovieTabSwitchRequested += SwitchToMovieTabExecute;
+        MovieIssuePopup.CancelRaised += ResetRentalIssue;
     }
 
     internal void SwitchToCustomerTabExecute(CustomerViewModel? customerVM) {
@@ -45,5 +39,9 @@ public partial class MainWindow : Window {
                 listBox.ScrollIntoView(listBox.SelectedItem);
             }
         }
+    }
+
+    internal void ResetRentalIssue(object? sender, RoutedEventArgs e) {
+        ViewModel.ResetRentalIssue();
     }
 }

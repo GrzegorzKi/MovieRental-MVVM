@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.Storage;
+using MovieRental.Model;
 using MovieRental.View.Modals;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +10,7 @@ namespace MovieRental.View;
 public partial class MoviesView : UserControl {
     public MoviesView() {
         InitializeComponent();
+        DatabaseDao.MoviesChanged += ViewModel.RefreshMovieList;
     }
 
     private void AddMovie(object sender, RoutedEventArgs e) {
@@ -15,9 +18,7 @@ public partial class MoviesView : UserControl {
             Owner = Window.GetWindow(this)
         };
 
-        if (editModal.ShowDialog() == true) {
-            ViewModel.refreshMovieList();
-        }
+        editModal.ShowDialog();
     }
 
     private void OnKeyEnterEditMovie(object sender, KeyEventArgs e) {
@@ -31,8 +32,6 @@ public partial class MoviesView : UserControl {
             Owner = Window.GetWindow(this)
         };
 
-        if (editModal.ShowDialog() == true) {
-            ViewModel.refreshMovieList();
-        }
+        editModal.ShowDialog();
     }
 }

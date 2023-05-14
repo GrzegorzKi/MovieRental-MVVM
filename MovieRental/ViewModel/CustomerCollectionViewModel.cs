@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using MovieRental.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,9 +19,7 @@ public class CustomerCollectionViewModel : ViewModelBase {
     }
 
     public CustomerCollectionViewModel() {
-        using var context = new AppDbContext();
-
-        var collection = context.Customers.Select(e => new CustomerViewModel(e));
+        var collection = DatabaseDao.GetCustomerViewModels();
         _customerList = new ObservableCollection<CustomerViewModel>(collection);
     }
 
@@ -30,10 +27,8 @@ public class CustomerCollectionViewModel : ViewModelBase {
         _customerList = new ObservableCollection<CustomerViewModel>(customers.Select(e => new CustomerViewModel(e)));
     }
 
-    public void refreshCustomerList() {
-        using var context = new AppDbContext();
-
-        var collection = context.Customers.Select(e => new CustomerViewModel(e));
+    public async void RefreshCustomerList() {
+        var collection = await DatabaseDao.GetCustomerViewModelsAsync();
         CustomerList = new ObservableCollection<CustomerViewModel>(collection);
     }
 }
