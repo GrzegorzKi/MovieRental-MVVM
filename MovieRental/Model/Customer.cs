@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,6 +13,8 @@ public class Customer {
     public string LastName { get; set; }
     public string Address { get; set; }
     public string Phone { get; set; }
+
+    public virtual ICollection<RentedMovie> RentedMovies { get; } = new List<RentedMovie>();
 
     [Timestamp]
     public Byte[]? RowVersion { get; set; }
@@ -36,5 +39,6 @@ public class Customer {
         LastName = copy.LastName;
         Address = copy.Address;
         Phone = copy.Phone;
+        RentedMovies = new List<RentedMovie>(copy.RentedMovies);
     }
 }
