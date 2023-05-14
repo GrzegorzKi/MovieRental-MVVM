@@ -8,7 +8,7 @@
              x:Name="self">
     <Grid>
         <Border HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Opacity="0.3"
+                Opacity="0.4"
                 Margin="5" Padding="5"
                 BorderBrush="Black" BorderThickness="2"
                 Background="LightBlue">
@@ -23,7 +23,7 @@
                 <EventTrigger RoutedEvent="Control.MouseLeave">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:0.2" To="0.3" Storyboard.TargetProperty="Opacity"/>
+                            <DoubleAnimation Duration="0:0:0.2" To="0.4" Storyboard.TargetProperty="Opacity"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>

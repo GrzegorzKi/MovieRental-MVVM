@@ -3,6 +3,7 @@ using MovieRental.Model;
 using MovieRental.View;
 using MovieRental.View.Dialogs;
 using System;
+using System.Linq;
 using System.Windows.Input;
 
 namespace MovieRental.ViewModel;
@@ -14,11 +15,13 @@ public class MainWindowViewModel : ViewModelBase {
 
     private ICommand? _selectCustomerToIssue;
     public ICommand SelectCustomerToIssue => _selectCustomerToIssue ??=
-        new RelayCommand<CustomerViewModel>(SelectCustomerToIssueExecute /* TODO Check if movie isn't already rented to customer */);
+        new RelayCommand<CustomerViewModel>(SelectCustomerToIssueExecute,
+            (e) => MovieToIssue == null || (e != null && e.RentedMovies.All((rm) => !rm.RentedMovieModel.MovieId.Equals(MovieToIssue.Id))));
 
     private ICommand? _selectMovieToIssue;
     public ICommand SelectMovieToIssue => _selectMovieToIssue ??=
-        new RelayCommand<MovieViewModel>(SelectMovieToIssueTabExecute /* TODO Check if movie isn't already rented to customer */);
+        new RelayCommand<MovieViewModel>(SelectMovieToIssueTabExecute,
+            (e) => CustomerToIssue == null || (e != null && e.RentedMovies.All((rm) => !rm.RentedMovieModel.CustomerId.Equals(CustomerToIssue.Id))));
 
     private ICommand? _findCustomerInList;
     public ICommand FindCustomerInList => _findCustomerInList ??=
@@ -73,8 +76,8 @@ public class MainWindowViewModel : ViewModelBase {
         if (CustomerToIssue != null && MovieToIssue != null) {
             DatabaseDao.AddRentedMovie(MovieToIssue.MovieModel, CustomerToIssue.CustomerModel);
 
-            _dialogService.Success("Movie has been issued!", "Movie issued");
             ResetRentalIssue();
+            _dialogService.Success("Movie has been issued!", "Movie issued");
         }
     }
 

@@ -68,6 +68,6 @@
                 <view:UnreturnedView x:Name="UnreturnedView" />
             </TabItem>
         </TabControl>
-        <uc:MovieIssuePopupPanel x:Name="MovieIssuePopup" />
+        <uc:MovieIssuePopupPanel x:Name="MovieIssuePopup" Margin="0,0,0,25" />
     </Grid>
 </Window>
