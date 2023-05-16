@@ -59,7 +59,7 @@ public class MainWindowViewModel : ViewModelBase {
 
     internal bool CanSelectCustomerToIssue(CustomerViewModel? e) {
         return MovieToIssue == null ||
-            (e != null && e.RentedMovies.All((rm) => !rm.MovieId.Equals(MovieToIssue.Id)));
+            (e != null && e.RentedMovies.All((rm) => !(rm.MovieId.Equals(MovieToIssue.Id) && rm.DateReturned == null)));
     }
 
     internal void SelectMovieToIssueTabExecute(MovieViewModel? movieVM) {
@@ -76,7 +76,7 @@ public class MainWindowViewModel : ViewModelBase {
 
     internal bool CanSelectMovieToIssue(MovieViewModel? e) {
         return CustomerToIssue == null ||
-            (e != null && e.RentedMovies.All((rm) => !rm.CustomerId.Equals(CustomerToIssue.Id)));
+            (e != null && e.RentedMovies.All((rm) => !(rm.CustomerId.Equals(CustomerToIssue.Id) && rm.DateReturned == null)));
     }
 
     internal void IssueMovieToCustomer() {

@@ -6,8 +6,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MovieRental.Model;
 
 [Table("RentedMovie")]
-[PrimaryKey(nameof(MovieId), nameof(CustomerId))]
 public class RentedMovie {
+    [Key]
+    public int? Id { get; set; }
     public int MovieId { get; set; }
     public int CustomerId { get; set; }
 
@@ -21,7 +22,11 @@ public class RentedMovie {
     [DataType(DataType.DateTime)]
     public DateTime? DateReturned { get; set; }
 
-    public RentedMovie(int movieId, int customerId, DateTime dateIssued, DateTime? dateReturned) {
+    public RentedMovie(int movieId, int customerId, DateTime dateIssued, DateTime? dateReturned)
+        : this(null, movieId, customerId, dateIssued, dateReturned) { }
+
+    public RentedMovie(int? id, int movieId, int customerId, DateTime dateIssued, DateTime? dateReturned) {
+        Id = id;
         MovieId = movieId;
         CustomerId = customerId;
         DateIssued = dateIssued;

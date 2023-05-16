@@ -1,5 +1,4 @@
 using MovieRental.View;
-using MovieRental.ViewModel;
 using System.Windows;
 
 namespace MovieRental;
@@ -13,7 +12,7 @@ public partial class MainWindow : Window {
         MovieIssuePopup.CancelRaised += ResetRentalIssue;
     }
 
-    internal void SwitchToCustomerTabExecute(CustomerViewModel? customerVM) {
+    internal void SwitchToCustomerTabExecute(object? customerVM) {
         CustomersTab.Focus();
 
         if (customerVM != null) {
@@ -27,7 +26,7 @@ public partial class MainWindow : Window {
         }
     }
 
-    internal void SwitchToMovieTabExecute(MovieViewModel? movieVM) {
+    internal void SwitchToMovieTabExecute(object? movieVM) {
         MoviesTab.Focus();
 
         if (movieVM != null) {
