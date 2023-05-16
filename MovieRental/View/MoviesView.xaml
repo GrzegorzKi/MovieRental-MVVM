@@ -30,16 +30,50 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="MoviesListBox"
+        <Grid VerticalAlignment="Center">
+            <TextBox x:Name="txtSearchMovies"
+                     FontStyle="Italic" Padding="5,0,5,0" Background="#FFEEFBFF" Height="30" FontSize="14"
+                     VerticalContentAlignment="Center" Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=200}"/>
+            <Image HorizontalAlignment="Right" Source="../Resources/Icons/search.png"
+                   Margin="0,0,10,0" Width="20" Height="20" Opacity="0.5">
+                <Image.Style>
+                    <Style TargetType="{x:Type Image}">
+                        <Setter Property="Visibility" Value="Hidden"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text.Length, ElementName=txtSearchMovies}" Value="0">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+            <Button BorderThickness="0" HorizontalAlignment="Right"
+                    Margin="0,0,5,0" FontWeight="Bold" BorderBrush="#FF4F4F4F" Width="26" Height="26" Background="{x:Null}" Foreground="#FF4F4F4F" Opacity="0.5"
+                    Command="{Binding ClearFilter}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=txtSearchMovies}" Value="">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Image Source="../Resources/Icons/clear.png" />
+            </Button>
+        </Grid>
+        <ListBox x:Name="MoviesListBox" Grid.Row="1"
                  ItemTemplate="{DynamicResource MovieModelNameTemplate}"
-                 ItemsSource="{Binding MovieList, Mode=OneWay}"
+                 ItemsSource="{Binding MovieListView, Mode=OneWay}"
                  ItemContainerStyle="{StaticResource ItemStyle}"
                  SelectedItem="{Binding SelectedMovie, Mode=TwoWay, UpdateSourceTrigger=Default}"
                  SelectedIndex="0"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5" Grid.Row="2">
             <Button Content="Show Movie Edit Modal" Click="AddMovie" Margin="0,0,5,0" />
             <Button Content="Move into Customer tab"
                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.FindCustomerInList}"

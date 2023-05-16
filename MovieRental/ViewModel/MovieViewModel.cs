@@ -46,7 +46,12 @@ public class MovieViewModel : ViewModelBase {
     }
 
     internal void DeleteMovieExecute() {
-        if (_dialogService.Confirm($"Delete movie {Title}?")) {
+        var message = $"Delete movie {Title}?";
+        if (RentedMovies.Count > 0) {
+            message += "\nWARNING: Movie might be currently rented - make sure all copies got returned!";
+        }
+
+        if (_dialogService.Confirm(message)) {
             DatabaseDao.DeleteMovie(MovieModel);
             UpdateMovieCompleted?.Invoke();
         }

@@ -8,9 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\clear.png" />
     <None Remove="Resources\Icons\customer.png" />
     <None Remove="Resources\Icons\missing.png" />
     <None Remove="Resources\Icons\movie.png" />
+    <None Remove="Resources\Icons\search.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,9 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Icons\clear.png" />
     <Resource Include="Resources\Icons\customer.png" />
     <Resource Include="Resources\Icons\missing.png" />
     <Resource Include="Resources\Icons\movie.png" />
+    <Resource Include="Resources\Icons\search.png" />
   </ItemGroup>
 
   <ItemGroup>

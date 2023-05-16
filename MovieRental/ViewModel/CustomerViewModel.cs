@@ -46,7 +46,12 @@ public class CustomerViewModel : ViewModelBase {
     }
 
     internal void DeleteCustomerExecute() {
-        if (_dialogService.Confirm($"Delete customer {FirstName} {LastName}?")) {
+        var message = $"Delete customer {FirstName} {LastName}?";
+        if (RentedMovies.Count > 0) {
+            message += "\nWARNING: Customer might have unreturned rented movies!";
+        }
+
+        if (_dialogService.Confirm(message)) {
             DatabaseDao.DeleteCustomer(CustomerModel);
             UpdateCustomerCompleted?.Invoke();
         }
