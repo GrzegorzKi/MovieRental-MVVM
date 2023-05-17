@@ -15,20 +15,11 @@
         <vm:MovieViewModel x:Name="ViewModel" />
     </Window.DataContext>
     <Window.Resources>
-        <Style TargetType="{x:Type StackPanel}">
-            <Setter Property="Margin" Value="5,2"/>
-        </Style>
-        <Style TargetType="{x:Type TextBox}">
+        <Style BasedOn="{StaticResource ButtonForms}" TargetType="{x:Type Button}" />
+        <Style BasedOn="{StaticResource StackPanelForms}" TargetType="{x:Type StackPanel}" />
+        <Style BasedOn="{StaticResource TextBoxInError}" TargetType="{x:Type TextBox}">
             <Setter Property="Height" Value="22"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
-        </Style>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Padding" Value="5,0" />
-            <Setter Property="MinWidth" Value="45" />
-            <Setter Property="Height" Value="24" />
-        </Style>
-        <Style TargetType="{x:Type Label}">
-            <Setter Property="Padding" Value="0,4" />
         </Style>
     </Window.Resources>
     <Grid Margin="10">
@@ -52,7 +43,7 @@
                 </StackPanel>
                 <StackPanel Grid.Column="1">
                     <Label Target="{Binding ElementName=txtTitle}" Content="_Title"/>
-                    <TextBox x:Name="txtTitle" Text="{Binding Title}"/>
+                    <TextBox x:Name="txtTitle" Text="{Binding Title, ValidatesOnNotifyDataErrors=True}" />
                 </StackPanel>
             </Grid>
             <StackPanel>
@@ -66,7 +57,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel>
                     <Label Target="{Binding ElementName=txtYear}" Content="_Year"/>
-                    <TextBox x:Name="txtYear" Text="{Binding Year}"/>
+                    <TextBox x:Name="txtYear" Text="{Binding Year, ValidatesOnNotifyDataErrors=True}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
                     <Label Target="{Binding ElementName=txtCopies}" Content="_Copies"/>
@@ -76,7 +67,7 @@
         </StackPanel>
         <StackPanel Grid.Column="1">
             <Label Target="{Binding ElementName=txtPlot}" Content="_Plot"/>
-            <TextBox x:Name="txtPlot" Text="{Binding Plot}" Height="122" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+            <TextBox x:Name="txtPlot" Text="{Binding Plot}" Height="130" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
         </StackPanel>
         <Grid Grid.ColumnSpan="2" Grid.Row="1" Margin="0,20,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">

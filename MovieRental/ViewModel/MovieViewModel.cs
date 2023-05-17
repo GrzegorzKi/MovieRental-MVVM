@@ -1,8 +1,10 @@
 using MovieRental.Commands;
 using MovieRental.Model;
+using MovieRental.Validations;
 using MovieRental.View.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows.Input;
 
@@ -37,12 +39,15 @@ public class MovieViewModel : ViewModelBase {
     }
 
     internal void UpdateMovieExecute() {
+        Validate();
+        if (HasErrors) return;
+
         DatabaseDao.UpdateMovie(MovieModel);
         UpdateMovieCompleted?.Invoke();
     }
 
     internal bool CanUpdateMovieExecute() {
-        return true;
+        return !HasErrors;
     }
 
     internal void DeleteMovieExecute() {
@@ -82,43 +87,50 @@ public class MovieViewModel : ViewModelBase {
         get => _movieModel.Id;
         set {
             _movieModel.Id = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
         }
     }
 
+    [Required]
     public string Title {
         get => _movieModel.Title;
         set {
             _movieModel.Title = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
         }
     }
+
+    [Required]
     public string Year {
         get => _movieModel.Year;
         set {
             _movieModel.Year = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
         }
     }
+
     public string Genre {
         get => _movieModel.Genre;
         set {
             _movieModel.Genre = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
         }
     }
+
     public string Plot {
         get => _movieModel.Plot;
         set {
             _movieModel.Plot = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
         }
     }
+
+    [PositiveInteger]
     public int Copies {
         get => _movieModel.Copies;
         set {
             _movieModel.Copies = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
         }
     }
 }

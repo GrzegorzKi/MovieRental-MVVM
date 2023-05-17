@@ -15,20 +15,11 @@
         <vm:CustomerViewModel x:Name="ViewModel" />
     </Window.DataContext>
     <Window.Resources>
-        <Style TargetType="{x:Type StackPanel}">
-            <Setter Property="Margin" Value="5,2"/>
-        </Style>
-        <Style TargetType="{x:Type TextBox}">
+        <Style BasedOn="{StaticResource ButtonForms}" TargetType="{x:Type Button}" />
+        <Style BasedOn="{StaticResource StackPanelForms}" TargetType="{x:Type StackPanel}" />
+        <Style BasedOn="{StaticResource TextBoxInError}" TargetType="{x:Type TextBox}">
             <Setter Property="Height" Value="22"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
-        </Style>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Padding" Value="5,0" />
-            <Setter Property="MinWidth" Value="45" />
-            <Setter Property="Height" Value="24" />
-        </Style>
-        <Style TargetType="{x:Type Label}">
-            <Setter Property="Padding" Value="0,4" />
         </Style>
     </Window.Resources>
     <UniformGrid Columns="1" Margin="10">

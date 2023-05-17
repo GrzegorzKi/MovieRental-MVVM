@@ -1,8 +1,10 @@
 using MovieRental.Commands;
 using MovieRental.Model;
+using MovieRental.Validations;
 using MovieRental.View.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows.Input;
 
@@ -37,12 +39,15 @@ public class CustomerViewModel : ViewModelBase {
     }
 
     internal void UpdateCustomerExecute() {
+        Validate();
+        if (HasErrors) return;
+
         DatabaseDao.UpdateCustomer(CustomerModel);
         UpdateCustomerCompleted?.Invoke();
     }
 
     internal bool CanUpdateCustomerExecute() {
-        return true;
+        return !HasErrors;
     }
 
     internal void DeleteCustomerExecute() {
@@ -82,24 +87,26 @@ public class CustomerViewModel : ViewModelBase {
         get => _customerModel.Id;
         set {
             _customerModel.Id = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
         }
     }
 
+    [Required]
     public string FirstName {
         get => _customerModel.FirstName;
         set {
             _customerModel.FirstName = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
             OnPropertyChanged(nameof(FullName));
         }
     }
 
+    [Required]
     public string LastName {
         get => _customerModel.LastName;
         set {
             _customerModel.LastName = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
             OnPropertyChanged(nameof(FullName));
         }
     }
@@ -112,7 +119,7 @@ public class CustomerViewModel : ViewModelBase {
         get => _customerModel.Address;
         set {
             _customerModel.Address = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
         }
     }
 
@@ -120,7 +127,7 @@ public class CustomerViewModel : ViewModelBase {
         get => _customerModel.Phone;
         set {
             _customerModel.Phone = value;
-            OnPropertyChanged();
+            OnPropertyChangedValidate(value);
         }
     }
 }
