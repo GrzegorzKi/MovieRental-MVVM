@@ -7,6 +7,7 @@
 Requires dotnet-ef to perform migrations on the database.
 
 ```
+dotnet tool install --global dotnet-ef
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```

@@ -19,7 +19,7 @@ public class MovieViewModel : ViewModelBase {
     public event Action? UpdateMovieCompleted;
 
     private ICommand? _updateMovie;
-    public ICommand UpdateMovie => _updateMovie ??= new RelayCommand(UpdateMovieExecute, CanUpdateMovieExecute);
+    public ICommand UpdateMovie => _updateMovie ??= new RelayCommand(UpdateMovieExecute);
 
     private ICommand? _deleteMovie;
     public ICommand DeleteMovie => _deleteMovie ??= new RelayCommand(DeleteMovieExecute, CanDeleteMovieExecute);
@@ -44,10 +44,6 @@ public class MovieViewModel : ViewModelBase {
 
         DatabaseDao.UpdateMovie(MovieModel);
         UpdateMovieCompleted?.Invoke();
-    }
-
-    internal bool CanUpdateMovieExecute() {
-        return !HasErrors;
     }
 
     internal void DeleteMovieExecute() {
@@ -125,6 +121,7 @@ public class MovieViewModel : ViewModelBase {
         }
     }
 
+    [Required]
     [PositiveInteger]
     public int Copies {
         get => _movieModel.Copies;

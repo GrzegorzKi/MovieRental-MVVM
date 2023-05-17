@@ -97,11 +97,15 @@ public abstract class ViewModelBase : INotifyPropertyChanged, INotifyDataErrorIn
     }
 
     public IEnumerable GetErrors(string? propertyName) {
-        List<string>? errorsForName;
-        if (propertyName != null && _errors.TryGetValue(propertyName, out errorsForName)) {
-            return errorsForName;
+        if (string.IsNullOrEmpty(propertyName)) {
+            return _errors.SelectMany(p => p.Value);
+        } else {
+            List<string>? errorsForName;
+            if (_errors.TryGetValue(propertyName, out errorsForName)) {
+                return errorsForName;
+            }
+            return new List<string>();
         }
-        return new List<string>();
     }
 
     public bool HasErrors {

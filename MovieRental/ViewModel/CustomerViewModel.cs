@@ -1,6 +1,5 @@
 using MovieRental.Commands;
 using MovieRental.Model;
-using MovieRental.Validations;
 using MovieRental.View.Dialogs;
 using System;
 using System.Collections.ObjectModel;
@@ -19,7 +18,7 @@ public class CustomerViewModel : ViewModelBase {
     public event Action? UpdateCustomerCompleted;
 
     private ICommand? _updateCustomer;
-    public ICommand UpdateCustomer => _updateCustomer ??= new RelayCommand(UpdateCustomerExecute, CanUpdateCustomerExecute);
+    public ICommand UpdateCustomer => _updateCustomer ??= new RelayCommand(UpdateCustomerExecute);
 
     private ICommand? _deleteCustomer;
     public ICommand DeleteCustomer => _deleteCustomer ??= new RelayCommand(DeleteCustomerExecute, CanDeleteCustomerExecute);
@@ -44,10 +43,6 @@ public class CustomerViewModel : ViewModelBase {
 
         DatabaseDao.UpdateCustomer(CustomerModel);
         UpdateCustomerCompleted?.Invoke();
-    }
-
-    internal bool CanUpdateCustomerExecute() {
-        return !HasErrors;
     }
 
     internal void DeleteCustomerExecute() {
