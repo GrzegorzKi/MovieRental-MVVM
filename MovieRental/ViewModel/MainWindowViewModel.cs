@@ -1,4 +1,4 @@
-using MovieRental.Commands;
+using MovieRental.Helpers;
 using MovieRental.Model;
 using MovieRental.View.Dialogs;
 using System;
@@ -9,8 +9,8 @@ namespace MovieRental.ViewModel;
 
 public class MainWindowViewModel : ViewModelBase {
 
-    public event Action<CustomerViewModel?>? CustomerTabSwitchRequested;
-    public event Action<MovieViewModel?>? MovieTabSwitchRequested;
+    public event Action<int?>? CustomerTabSwitchRequested;
+    public event Action<int?>? MovieTabSwitchRequested;
 
     private ICommand? _selectCustomerToIssue;
     public ICommand SelectCustomerToIssue => _selectCustomerToIssue ??=
@@ -22,11 +22,11 @@ public class MainWindowViewModel : ViewModelBase {
 
     private ICommand? _findCustomerInList;
     public ICommand FindCustomerInList => _findCustomerInList ??=
-        new RelayCommand<CustomerViewModel?>(CustomerTabSwitchRequested!);
+        new RelayCommand<int?>(CustomerTabSwitchRequested!);
 
     private ICommand? _findMovieInList;
     public ICommand FindMovieInList => _findMovieInList ??=
-        new RelayCommand<MovieViewModel>(MovieTabSwitchRequested!);
+        new RelayCommand<int?>(MovieTabSwitchRequested!);
 
     private readonly IDialogService _dialogService;
 

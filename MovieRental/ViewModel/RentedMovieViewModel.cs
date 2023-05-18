@@ -1,9 +1,13 @@
 using MovieRental.Model;
+using MovieRental.View.Dialogs;
 using System;
 
 namespace MovieRental.ViewModel;
 
 public class RentedMovieViewModel : ViewModelBase {
+    // TODO Might want to use IoC solution for that
+    private readonly IDialogService _dialogService = new DialogService();
+
     protected RentedMovie _rentedMovieModel;
 
     public RentedMovieViewModel(RentedMovie rentedMovieModel) {
@@ -17,6 +21,16 @@ public class RentedMovieViewModel : ViewModelBase {
                 // Trigger change on all properties
                 OnPropertyChanged(string.Empty);
             }
+        }
+    }
+
+    public void ReturnMovieExecute() {
+        var message = $"Return \"{MovieTitle}\"?\n\n" +
+                $"Rented by {FirstName} {LastName}\n" +
+                $"Rented on {DateIssued}";
+
+        if (_dialogService.Confirm(message)) {
+            DatabaseDao.ReturnRentedMovie(_rentedMovieModel);
         }
     }
 

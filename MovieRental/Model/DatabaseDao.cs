@@ -18,6 +18,7 @@ internal static class DatabaseDao {
 
         return context.Customers
             .Include(p => p.RentedMovies)
+            .ThenInclude(m => m.Movie)
             .Select(e => new CustomerViewModel(e)).ToList();
     }
 
@@ -26,6 +27,7 @@ internal static class DatabaseDao {
 
         return await context.Customers
             .Include(p => p.RentedMovies)
+            .ThenInclude(m => m.Movie)
             .Select(e => new CustomerViewModel(e)).ToListAsync();
     }
 
@@ -34,6 +36,7 @@ internal static class DatabaseDao {
 
         return context.Movies
             .Include(p => p.RentedMovies)
+            .ThenInclude(m => m.Customer)
             .Select(e => new MovieViewModel(e)).ToList();
     }
 
@@ -42,6 +45,7 @@ internal static class DatabaseDao {
 
         return await context.Movies
             .Include(p => p.RentedMovies)
+            .ThenInclude(m => m.Customer)
             .Select(e => new MovieViewModel(e)).ToListAsync();
     }
 
@@ -53,8 +57,9 @@ internal static class DatabaseDao {
             context.SaveChanges();
         } else {
             var dbCustomer = context.Customers.Find(customer.Id);
-            if (dbCustomer == null)
+            if (dbCustomer == null) {
                 return;
+            }
             context.Entry(dbCustomer).CurrentValues.SetValues(customer);
             context.SaveChanges();
         }
@@ -85,8 +90,9 @@ internal static class DatabaseDao {
             context.SaveChanges();
         } else {
             var dbMovie = context.Movies.Find(movie.Id);
-            if (dbMovie == null)
+            if (dbMovie == null) {
                 return;
+            }
             context.Entry(dbMovie).CurrentValues.SetValues(movie);
             context.SaveChanges();
         }
@@ -98,9 +104,9 @@ internal static class DatabaseDao {
         using var context = new AppDbContext();
 
         var dbMovie = context.Movies.Find(movie.Id);
-        if (dbMovie == null)
+        if (dbMovie == null) {
             return false;
-
+        }
         context.Movies.Remove(dbMovie);
         context.SaveChanges();
 
@@ -113,6 +119,21 @@ internal static class DatabaseDao {
 
         var rentedMovie = new RentedMovie((int) movieToIssue.Id!, (int) customerToIssue.Id!, DateTime.Now, null);
         context.Add(rentedMovie);
+        context.SaveChanges();
+
+        CustomersChanged?.Invoke();
+        MoviesChanged?.Invoke();
+        MoviesRentedChanged?.Invoke();
+    }
+
+    public static void ReturnRentedMovie(RentedMovie rentedMovie) {
+        using var context = new AppDbContext();
+
+        var dbRentedMovie = context.RentedMovies.Find(rentedMovie.Id);
+        if (dbRentedMovie == null) {
+            return;
+        }
+        dbRentedMovie.DateReturned = DateTime.Now;
         context.SaveChanges();
 
         CustomersChanged?.Invoke();

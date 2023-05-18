@@ -1,4 +1,4 @@
-using MovieRental.Commands;
+using MovieRental.Helpers;
 using MovieRental.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,13 +10,13 @@ using System.Windows.Input;
 
 namespace MovieRental.ViewModel;
 
-public class MovieColletionViewModel : ViewModelBase {
+public class MovieCollectionViewModel : ViewModelBase {
 
     protected ICommand? _clearFilter;
     public ICommand ClearFilter => _clearFilter ??= new RelayCommand(OnClearFilter);
 
     protected ObservableCollection<MovieViewModel> _movieList;
-    protected ObservableCollection<MovieViewModel> MovieList {
+    public ObservableCollection<MovieViewModel> MovieList {
         get => _movieList;
         set => SetProperty(ref _movieList, value);
     }
@@ -26,7 +26,17 @@ public class MovieColletionViewModel : ViewModelBase {
     protected MovieViewModel? _selectedMovie;
     public MovieViewModel? SelectedMovie {
         get => _selectedMovie;
-        set => SetProperty(ref _selectedMovie, value);
+        set {
+            if (SetProperty(ref _selectedMovie, value)) {
+                SelectedMovieRentalHistory = _selectedMovie?.RentedMovies ?? new ObservableCollection<RentedMovieViewModel>();
+            }
+        }
+    }
+
+    protected ObservableCollection<RentedMovieViewModel>? _selectedMovieRentalHistory;
+    public ObservableCollection<RentedMovieViewModel>? SelectedMovieRentalHistory {
+        get => _selectedMovieRentalHistory;
+        set => SetProperty(ref _selectedMovieRentalHistory, value);
     }
 
     protected string _filter = string.Empty;
@@ -39,7 +49,7 @@ public class MovieColletionViewModel : ViewModelBase {
         }
     }
 
-    public MovieColletionViewModel() {
+    public MovieCollectionViewModel() {
         var collection = DatabaseDao.GetMovieViewModels();
         _movieList = new ObservableCollection<MovieViewModel>(collection);
         _movieListView = new CollectionViewSource {
@@ -48,7 +58,7 @@ public class MovieColletionViewModel : ViewModelBase {
         _movieListView.Filter += ApplyFilter;
     }
 
-    internal MovieColletionViewModel(IEnumerable<Movie> movies) {
+    internal MovieCollectionViewModel(IEnumerable<Movie> movies) {
         _movieList = new ObservableCollection<MovieViewModel>(movies.Select(e => new MovieViewModel(e)));
         _movieListView = new CollectionViewSource {
             Source = MovieList

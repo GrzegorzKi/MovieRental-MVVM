@@ -1,4 +1,4 @@
-using MovieRental.Commands;
+using MovieRental.Helpers;
 using MovieRental.Model;
 using MovieRental.View.Dialogs;
 using System;
@@ -10,7 +10,8 @@ using System.Windows.Input;
 namespace MovieRental.ViewModel;
 
 public class CustomerViewModel : ViewModelBase {
-    private readonly IDialogService _dialogService;
+    // TODO Might want to use IoC solution for that
+    private readonly IDialogService _dialogService = new DialogService();
 
     protected Customer _customerModel;
     protected ObservableCollection<RentedMovieViewModel> _rentedMovies;
@@ -24,14 +25,11 @@ public class CustomerViewModel : ViewModelBase {
     public ICommand DeleteCustomer => _deleteCustomer ??= new RelayCommand(DeleteCustomerExecute, CanDeleteCustomerExecute);
 
     public CustomerViewModel() {
-        // TODO Might want to use IoC solution for that
-        _dialogService = new DialogService();
         _customerModel = new Customer();
         _rentedMovies = new ObservableCollection<RentedMovieViewModel>();
     }
 
     public CustomerViewModel(Customer customerModel) {
-        // TODO Might want to use IoC solution for that
         _dialogService = new DialogService();
         _customerModel = customerModel;
         _rentedMovies = new ObservableCollection<RentedMovieViewModel>(customerModel.RentedMovies.Select(e => new RentedMovieViewModel(e)));

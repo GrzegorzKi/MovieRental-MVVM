@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MovieRental.DesignTimeViewModel;
 
-public class SampleMovieCollectionViewModel : MovieColletionViewModel {
+public class SampleMovieCollectionViewModel : MovieCollectionViewModel {
 
     public SampleMovieCollectionViewModel() : base(new List<Movie>() {
         new Model.Movie(1,"The Shawshank Redemption","1994","crime, drama","Over the course of several years, two convicts form a friendship, seeking consolation and, eventually, redemption through basic compassion.",3),

@@ -10,6 +10,7 @@ namespace MovieRental.Model;
 internal class AppDbContext : DbContext {
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Movie> Movies { get; set; }
+    public DbSet<RentedMovie> RentedMovies { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         string connectionString = ConfigurationManager.ConnectionStrings["SQLite"].ConnectionString;

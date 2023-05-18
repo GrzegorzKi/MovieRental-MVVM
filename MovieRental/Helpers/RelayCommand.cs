@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Input;
 
-namespace MovieRental.Commands;
+namespace MovieRental.Helpers;
 
 public class RelayCommand<T> : ICommand {
     protected readonly Action<T?> _execute;

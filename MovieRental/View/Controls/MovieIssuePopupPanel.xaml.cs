@@ -17,7 +17,7 @@ public partial class MovieIssuePopupPanel : UserControl {
     }
 
     public static readonly DependencyProperty TextProperty =
-        DependencyProperty.Register("Text", typeof(string), typeof(MovieIssuePopupPanel), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(Text), typeof(string), typeof(MovieIssuePopupPanel), new PropertyMetadata(null));
 
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) {

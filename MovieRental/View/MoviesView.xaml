@@ -3,23 +3,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:MovieRental.View"
              xmlns:vm="clr-namespace:MovieRental.ViewModel"
              xmlns:dvm="clr-namespace:MovieRental.DesignTimeViewModel"
+             xmlns:uc="clr-namespace:MovieRental.View.Controls"
              mc:Ignorable="d"
              d:DesignWidth="800" d:DesignHeight="400" d:Background="White"
              d:DataContext="{d:DesignInstance d:Type=dvm:SampleMovieCollectionViewModel, IsDesignTimeCreatable=True}">
     <UserControl.DataContext>
-        <vm:MovieColletionViewModel x:Name="ViewModel" />
+        <vm:MovieCollectionViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <UserControl.Resources>
         <DataTemplate x:Key="MovieModelNameTemplate">
+            <DataTemplate.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="MinHeight" Value="12"/>
+                </Style>
+            </DataTemplate.Resources>
             <Grid Height="Auto" Width="Auto" Margin="0,15">
                 <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Stretch">
-                    <TextBlock x:Name="Title" Text="{Binding Title}" MinHeight="12" MinWidth="20" FontSize="14" FontWeight="Normal"/>
-                    <TextBlock x:Name="perenthL" TextWrapping="Wrap" Text="(" Margin="5,0,0,0" FontWeight="Normal" FontStyle="Italic" FontSize="14"/>
-                    <TextBlock x:Name="Year" Text="{Binding Year}" MinHeight="12" MinWidth="20" Margin="0" FontSize="14" FontStyle="Italic" FontWeight="Normal"/>
-                    <TextBlock x:Name="perenthR" TextWrapping="Wrap" Text=")" Margin="0" FontWeight="Normal" FontStyle="Italic" FontSize="14"/>
+                    <TextBlock Text="{Binding Title}" MinWidth="20" Margin="0,0,5,0"/>
+                    <TextBlock  Text="(" TextWrapping="Wrap" FontStyle="Italic"/>
+                    <TextBlock Text="{Binding Year}" MinHeight="12" MinWidth="25" FontStyle="Italic"/>
+                    <TextBlock Text=")" TextWrapping="Wrap" FontStyle="Italic"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -34,39 +40,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Grid VerticalAlignment="Center">
-            <TextBox x:Name="txtSearchMovies"
-                     FontStyle="Italic" Padding="5,0,5,0" Background="#FFEEFBFF" Height="30" FontSize="14"
-                     VerticalContentAlignment="Center" Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=200}"/>
-            <Image HorizontalAlignment="Right" Source="../Resources/Icons/search.png"
-                   Margin="0,0,10,0" Width="20" Height="20" Opacity="0.5">
-                <Image.Style>
-                    <Style TargetType="{x:Type Image}">
-                        <Setter Property="Visibility" Value="Hidden"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Text.Length, ElementName=txtSearchMovies}" Value="0">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Image.Style>
-            </Image>
-            <Button BorderThickness="0" HorizontalAlignment="Right"
-                    Margin="0,0,5,0" FontWeight="Bold" BorderBrush="#FF4F4F4F" Width="26" Height="26" Background="{x:Null}" Foreground="#FF4F4F4F" Opacity="0.5"
-                    Command="{Binding ClearFilter}">
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="Visibility" Value="Visible"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Text, ElementName=txtSearchMovies}" Value="">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-                <Image Source="../Resources/Icons/clear.png" />
-            </Button>
-        </Grid>
+        <uc:Searchbar FilterText="{Binding Filter, Mode=TwoWay}" ClearFilterCommand="{Binding ClearFilter}" />
         <ListBox x:Name="MoviesListBox" Grid.Row="1"
                  ItemTemplate="{DynamicResource MovieModelNameTemplate}"
                  ItemsSource="{Binding MovieListView, Mode=OneWay}"
