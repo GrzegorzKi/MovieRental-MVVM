@@ -3,8 +3,8 @@ using MovieRental.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -14,6 +14,10 @@ public class MovieCollectionViewModel : ViewModelBase {
 
     protected ICommand? _clearFilter;
     public ICommand ClearFilter => _clearFilter ??= new RelayCommand(OnClearFilter);
+
+    protected ICommand? _returnMovie;
+    public ICommand ReturnMovie => _returnMovie ??=
+        new RelayCommand<RentedMovieViewModel>(ReturnMovieExecute, CanReturnMovie);
 
     protected ObservableCollection<MovieViewModel> _movieList;
     public ObservableCollection<MovieViewModel> MovieList {
@@ -36,7 +40,17 @@ public class MovieCollectionViewModel : ViewModelBase {
     protected ObservableCollection<RentedMovieViewModel>? _selectedMovieRentalHistory;
     public ObservableCollection<RentedMovieViewModel>? SelectedMovieRentalHistory {
         get => _selectedMovieRentalHistory;
-        set => SetProperty(ref _selectedMovieRentalHistory, value);
+        set {
+            if (SetProperty(ref _selectedMovieRentalHistory, value)) {
+                _selectedMovieUnreturnedMoviesView.Source = SelectedMovieRentalHistory;
+                OnPropertyChanged(nameof(SelectedMovieUnreturnedMovies));
+            }
+        }
+    }
+
+    protected CollectionViewSource _selectedMovieUnreturnedMoviesView;
+    public ICollectionView SelectedMovieUnreturnedMovies {
+        get => _selectedMovieUnreturnedMoviesView.View;
     }
 
     protected string _filter = string.Empty;
@@ -49,21 +63,22 @@ public class MovieCollectionViewModel : ViewModelBase {
         }
     }
 
-    public MovieCollectionViewModel() {
-        var collection = DatabaseDao.GetMovieViewModels();
-        _movieList = new ObservableCollection<MovieViewModel>(collection);
-        _movieListView = new CollectionViewSource {
-            Source = MovieList
-        };
-        _movieListView.Filter += ApplyFilter;
-    }
+    public MovieCollectionViewModel()
+        : this(DatabaseDao.GetMovieViewModels()) { }
 
-    internal MovieCollectionViewModel(IEnumerable<Movie> movies) {
-        _movieList = new ObservableCollection<MovieViewModel>(movies.Select(e => new MovieViewModel(e)));
+    internal MovieCollectionViewModel(IEnumerable<Movie> movies)
+        : this(movies.Select(e => new MovieViewModel(e))) { }
+
+    internal MovieCollectionViewModel(IEnumerable<MovieViewModel> movieVMs) {
+        _movieList = new ObservableCollection<MovieViewModel>(movieVMs);
         _movieListView = new CollectionViewSource {
             Source = MovieList
         };
         _movieListView.Filter += ApplyFilter;
+        _selectedMovieUnreturnedMoviesView = new CollectionViewSource() {
+            Source = SelectedMovieRentalHistory
+        };
+        _selectedMovieUnreturnedMoviesView.Filter += FilterUnreturnedMovie;
     }
 
     public async void RefreshMovieList() {
@@ -86,5 +101,20 @@ public class MovieCollectionViewModel : ViewModelBase {
 
     public void OnClearFilter() {
         Filter = string.Empty;
+    }
+
+    public bool CanReturnMovie([NotNullWhen(true)] RentedMovieViewModel? rentedMovieVM) {
+        return rentedMovieVM != null && rentedMovieVM.DateReturned == null;
+    }
+
+    public void ReturnMovieExecute(RentedMovieViewModel? rentedMovieVM) {
+        if (CanReturnMovie(rentedMovieVM)) {
+            rentedMovieVM.ReturnMovieExecute();
+        }
+    }
+
+    internal void FilterUnreturnedMovie(object sender, FilterEventArgs e) {
+        RentedMovieViewModel movieVM = (RentedMovieViewModel) e.Item;
+        e.Accepted = (movieVM.DateReturned == null);
     }
 }

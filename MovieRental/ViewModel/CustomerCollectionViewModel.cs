@@ -1,7 +1,5 @@
 using MovieRental.Helpers;
 using MovieRental.Model;
-using MovieRental.View.Dialogs;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,8 +11,6 @@ using System.Windows.Input;
 namespace MovieRental.ViewModel;
 
 public class CustomerCollectionViewModel : ViewModelBase {
-    // TODO Might want to use IoC solution for that
-    private readonly IDialogService _dialogService = new DialogService();
 
     protected ICommand? _clearFilter;
     public ICommand ClearFilter => _clearFilter ??= new RelayCommand(ClearFilterExecute);
@@ -28,7 +24,7 @@ public class CustomerCollectionViewModel : ViewModelBase {
         get => _customerList;
         set => SetProperty(ref _customerList, value);
     }
-    protected CollectionViewSource _customerListView { get; }
+    protected CollectionViewSource _customerListView;
     public ICollectionView CustomerListView { get => _customerListView.View; }
 
     protected CustomerViewModel? _selectedCustomer;
@@ -44,11 +40,18 @@ public class CustomerCollectionViewModel : ViewModelBase {
     protected ObservableCollection<RentedMovieViewModel>? _selectedCustomerRentalHistory;
     public ObservableCollection<RentedMovieViewModel>? SelectedCustomerRentalHistory {
         get => _selectedCustomerRentalHistory;
-        set => SetProperty(ref _selectedCustomerRentalHistory, value);
+        set {
+            if (SetProperty(ref _selectedCustomerRentalHistory, value)) {
+                _selectedCustomerUnreturnedMoviesView.Source = SelectedCustomerRentalHistory;
+                OnPropertyChanged(nameof(SelectedCustomerUnreturnedMovies));
+            }
+        }
     }
 
-    // TODO Perform filtering logic to show only unreturned movies
-    public List<RentedMovieViewModel> SelectedCustomerUnreturnedMovies { get; set; }
+    protected CollectionViewSource _selectedCustomerUnreturnedMoviesView;
+    public ICollectionView SelectedCustomerUnreturnedMovies {
+        get => _selectedCustomerUnreturnedMoviesView.View;
+    }
 
     protected string _filter = string.Empty;
     public string Filter {
@@ -61,21 +64,22 @@ public class CustomerCollectionViewModel : ViewModelBase {
     }
 
 
-    public CustomerCollectionViewModel() {
-        var collection = DatabaseDao.GetCustomerViewModels();
-        _customerList = new WpfRangeObservableCollection<CustomerViewModel>(collection);
-        _customerListView = new CollectionViewSource() {
-            Source = CustomerList
-        };
-        _customerListView.Filter += ApplyFilter;
-    }
+    public CustomerCollectionViewModel()
+        : this(DatabaseDao.GetCustomerViewModels()) { }
 
-    internal CustomerCollectionViewModel(IEnumerable<Customer> customers) {
-        _customerList = new WpfRangeObservableCollection<CustomerViewModel>(customers.Select(e => new CustomerViewModel(e)));
+    internal CustomerCollectionViewModel(IEnumerable<Customer> customers)
+        : this(customers.Select(e => new CustomerViewModel(e))) { }
+
+    internal CustomerCollectionViewModel(IEnumerable<CustomerViewModel> customerVMs) {
+        _customerList = new WpfRangeObservableCollection<CustomerViewModel>(customerVMs);
         _customerListView = new CollectionViewSource() {
             Source = CustomerList
         };
         _customerListView.Filter += ApplyFilter;
+        _selectedCustomerUnreturnedMoviesView = new CollectionViewSource() {
+            Source = SelectedCustomerRentalHistory
+        };
+        _selectedCustomerUnreturnedMoviesView.Filter += FilterUnreturnedMovie;
     }
 
     public async void RefreshCustomerList() {
@@ -106,5 +110,10 @@ public class CustomerCollectionViewModel : ViewModelBase {
         if (CanReturnMovie(rentedMovieVM)) {
             rentedMovieVM.ReturnMovieExecute();
         }
+    }
+
+    internal void FilterUnreturnedMovie(object sender, FilterEventArgs e) {
+        RentedMovieViewModel movieVM = (RentedMovieViewModel) e.Item;
+        e.Accepted = (movieVM.DateReturned == null);
     }
 }

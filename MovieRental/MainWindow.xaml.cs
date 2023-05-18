@@ -1,9 +1,6 @@
-using MovieRental.Model;
 using MovieRental.View;
-using System.Collections;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace MovieRental;
 

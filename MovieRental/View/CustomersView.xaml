@@ -30,15 +30,10 @@
         <DataTemplate x:Key="RentedMovieCustHistoryTemplate">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Width="Auto" Margin="0,5">
-                    <TextBlock TextWrapping="Wrap" Text="Rented" Margin="0,0,5,0"/>
+                    <TextBlock Text="Rented" Margin="0,0,5,0"/>
                     <TextBlock Text="{Binding MovieTitle}" FontWeight="Bold" Margin="0"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Width="Auto" Margin="0,5">
-                    <TextBlock TextWrapping="Wrap" Text="From" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding DateIssued, StringFormat=\{0:d\}}"/>
-                    <TextBlock TextWrapping="Wrap" Text="to" Width="Auto" Margin="5,0"/>
-                    <TextBlock Text="{Binding DateReturned, StringFormat=\{0:d\}}"/>
-                </StackPanel>
+                <TextBlock TextWrapping="Wrap" Text="{Binding DatesInfo}" Margin="0,0,5,0"/>
             </StackPanel>
         </DataTemplate>
 
@@ -94,12 +89,12 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <StackPanel x:Name="CustDetails" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <StackPanel x:Name="NameStack" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock x:Name="lblFirstName" Text="{Binding SelectedCustomer.FullName}" FontSize="48" FontWeight="Bold"/>
+                <StackPanel x:Name="CustomerDetails" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding SelectedCustomer.FullName}" FontSize="48" FontWeight="Bold"/>
                     </StackPanel>
-                    <TextBlock x:Name="lblAddress" Text="{Binding SelectedCustomer.Address, FallbackValue=Address, Mode=OneWay}" FontSize="24"/>
-                    <TextBlock x:Name="lblPhone" Text="{Binding SelectedCustomer.Phone, FallbackValue=Phone}" FontSize="24"/>
+                    <TextBlock Text="{Binding SelectedCustomer.Address, FallbackValue=Address, Mode=OneWay}" FontSize="24"/>
+                    <TextBlock Text="{Binding SelectedCustomer.Phone, FallbackValue=Phone}" FontSize="24"/>
                 </StackPanel>
                 <Grid x:Name="CustRentals" Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -114,27 +109,37 @@
                     <DockPanel Margin="10" Grid.Column="1">
                         <Label Content="Currently _rented:" Target="{Binding ElementName=CustRentCurrent}" DockPanel.Dock="Top" />
                         <ListBox x:Name="CustRentCurrent" ItemTemplate="{DynamicResource RentedMovieCustHistoryTemplate}"
-                                 ItemsSource="{Binding SelectedCustomerRentalHistory}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
+                                 ItemsSource="{Binding SelectedCustomerUnreturnedMovies}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
                     </DockPanel>
                 </Grid>
             </Grid>
         </Grid>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,5" Grid.Row="1">
-            <Button Content="New Customer" Click="AddCustomer" Margin="0,0,5,0" Background="#57e841"/>
-            <Button Content="Edit Details" Click="EditCustomer" BorderThickness="1,1,0,1" Background="#F0D5D5"/>
-            <Button Content="Delete" Click="DeleteCustomer" BorderThickness="0,1,1,1" Margin="0,0,5,0" Background="#D16A6A"/>
-            <Button Content="Issue Movie" Margin="0,0,5,0" Background="#f2df33"
+        <Border Background="#E7E7E7" BorderBrush="WhiteSmoke" BorderThickness="0,1,0,0" Margin="0,4,0,0" Grid.Row="1">
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,5,0,0">
+                <Button Content="New Customer" Click="AddCustomer" Margin="0,0,5,5" Background="#57e841"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,5,5">
+                    <Button Content="Edit Details" Click="EditCustomer" BorderThickness="1,1,0,1" Background="#F0D5D5"/>
+                    <Button Content="Delete" Click="DeleteCustomer" BorderThickness="0,1,1,1" Background="#D16A6A"/>
+                </StackPanel>
+                <Button Content="Issue Movie" Margin="0,0,5,5" Background="#f2df33"
                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectCustomerToIssue}"
                     CommandParameter="{Binding SelectedCustomer}">
-                <Button.ToolTip>
-                    <ToolTip>
-                        <TextBlock Text="Customer has this movie rented, cannot rent another." />
-                    </ToolTip>
-                </Button.ToolTip>
-            </Button>
-            <Button Content="Return Rented Movie" Background="#FF94C7EA"
-                    Command="{Binding ReturnMovie}" CommandParameter="{Binding SelectedItem, ElementName=CustRentCurrent}"/>
-        </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock Text="Customer has this movie rented, cannot rent another." />
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+                <Button Content="Return Rented Movie" Background="#FF94C7EA"  Margin="0,0,5,5"
+                    Command="{Binding ReturnMovie}" CommandParameter="{Binding SelectedItem, ElementName=CustRentCurrent}">
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock Text="Select a movie to return from the list on the right." />
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+            </WrapPanel>
+        </Border>
     </Grid>
 </UserControl>

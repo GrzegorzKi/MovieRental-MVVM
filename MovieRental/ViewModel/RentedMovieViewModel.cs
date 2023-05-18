@@ -61,4 +61,10 @@ public class RentedMovieViewModel : ViewModelBase {
     public DateTime? DateReturned {
         get => _rentedMovieModel.DateReturned;
     }
+
+    public string DatesInfo {
+        get => DateReturned != null
+            ? string.Format("From {0} to {1}", DateIssued.ToShortDateString(), DateReturned?.ToShortDateString())
+            : string.Format("From {0} (unreturned)", DateIssued.ToShortDateString());
+    }
 }
