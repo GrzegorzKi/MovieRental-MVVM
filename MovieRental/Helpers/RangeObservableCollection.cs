@@ -575,7 +575,7 @@ public class RangeObservableCollection<T> : ObservableCollection<T> {
 
     #region Private Types
     internal sealed class DeferredEventsCollection : List<NotifyCollectionChangedEventArgs>, IDisposable {
-        readonly RangeObservableCollection<T> _collection;
+        internal readonly RangeObservableCollection<T> _collection;
         public DeferredEventsCollection(RangeObservableCollection<T> collection) {
             Debug.Assert(collection != null);
             Debug.Assert(collection._deferredEvents == null);

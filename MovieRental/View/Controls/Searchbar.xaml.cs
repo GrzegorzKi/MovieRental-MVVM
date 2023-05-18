@@ -5,8 +5,6 @@ using System.Windows.Input;
 namespace MovieRental.View.Controls;
 
 public partial class Searchbar : UserControl {
-    public event RoutedEventHandler? CancelRaised;
-
     public Searchbar() {
         InitializeComponent();
     }

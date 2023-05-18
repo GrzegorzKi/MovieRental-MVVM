@@ -30,7 +30,7 @@
             </Border.Triggers>
             <WrapPanel>
                 <TextBlock Text="{Binding Path=Text, StringFormat='\{0} or', ElementName=self}" />
-                <Button Margin="5,0,0,0" Padding="5,0" Click="CancelButton_Click">Cancel</Button>
+                <Button Margin="5,0,0,0" Padding="5,0" Click="CancelButton_Click" Background="AliceBlue">Cancel</Button>
             </WrapPanel>
         </Border>
     </Grid>
