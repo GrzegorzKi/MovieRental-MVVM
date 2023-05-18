@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore.Storage;
 using MovieRental.Model;
 using MovieRental.View.Modals;
+using MovieRental.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -33,5 +33,36 @@ public partial class MoviesView : UserControl {
         };
 
         editModal.ShowDialog();
+    }
+
+    private void SwitchToCustomer(object sender, RoutedEventArgs e) {
+        if (sender is ListBoxItem item && item.DataContext is RentedMovieViewModel rentedMovieVM) {
+            var command = item.Tag as ICommand;
+            if (command != null && command.CanExecute(rentedMovieVM.CustomerId)) {
+                command.Execute(rentedMovieVM.CustomerId);
+            }
+        }
+    }
+
+    private void OnKeyEnterSwitchToCustomer(object sender, KeyEventArgs e) {
+        if (e.Key == Key.Enter) {
+            SwitchToCustomer(sender, e);
+        }
+    }
+
+
+    private GridLength _rememberWidth = GridLength.Auto;
+
+    private void GridCollapsed(object sender, RoutedEventArgs e) {
+        if (sender is Grid grid) {
+            _rememberWidth = grid.ColumnDefinitions[1].Width;
+            grid.ColumnDefinitions[1].Width = GridLength.Auto;
+        }
+    }
+
+    private void GridExpanded(object sender, RoutedEventArgs e) {
+        if (sender is Grid grid) {
+            grid.ColumnDefinitions[1].Width = _rememberWidth;
+        }
     }
 }

@@ -23,44 +23,146 @@
             <Grid Height="Auto" Width="Auto" Margin="0,15">
                 <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Stretch">
                     <TextBlock Text="{Binding Title}" MinWidth="20" Margin="0,0,5,0"/>
-                    <TextBlock  Text="(" TextWrapping="Wrap" FontStyle="Italic"/>
-                    <TextBlock Text="{Binding Year}" MinHeight="12" MinWidth="25" FontStyle="Italic"/>
+                    <TextBlock Text="(" TextWrapping="Wrap" FontStyle="Italic"/>
+                    <TextBlock Text="{Binding Year}" MinHeight="12" MinWidth="30" FontStyle="Italic"/>
                     <TextBlock Text=")" TextWrapping="Wrap" FontStyle="Italic"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
+
         <Style x:Key="ItemStyle" TargetType="ListBoxItem">
             <EventSetter Event="MouseDoubleClick" Handler="EditMovie"/>
             <EventSetter Event="KeyDown" Handler="OnKeyEnterEditMovie"/>
         </Style>
+        <Style x:Key="RentedMovieItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.FindCustomerInList}"/>
+            <EventSetter Event="MouseDoubleClick" Handler="SwitchToCustomer"/>
+            <EventSetter Event="KeyDown" Handler="OnKeyEnterSwitchToCustomer"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="8,4"/>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <uc:Searchbar FilterText="{Binding Filter, Mode=TwoWay}" ClearFilterCommand="{Binding ClearFilter}" />
-        <ListBox x:Name="MoviesListBox" Grid.Row="1"
-                 ItemTemplate="{DynamicResource MovieModelNameTemplate}"
-                 ItemsSource="{Binding MovieListView, Mode=OneWay}"
-                 ItemContainerStyle="{StaticResource ItemStyle}"
-                 SelectedItem="{Binding SelectedMovie, Mode=TwoWay, UpdateSourceTrigger=Default}"
-                 SelectedIndex="0"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5" Grid.Row="2">
-            <Button Content="Show Movie Edit Modal" Click="AddMovie" Margin="0,0,5,0" />
-            <Button Content="Move into Customer tab"
-                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.FindCustomerInList}"
-                    Margin="0,0,5,0"/>
-            <Button Content="Issue Movie"
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" MaxWidth="250"/>
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel LastChildFill="True">
+                <uc:Searchbar Height="30" DockPanel.Dock="Top" FilterText="{Binding Filter, Mode=TwoWay}" ClearFilterCommand="{Binding ClearFilter}" />
+                <ListBox x:Name="MoviesListBox" Grid.Row="1" Height="auto"
+                         ItemsSource="{Binding MovieListView, Mode=OneWay}"
+                         SelectedItem="{Binding SelectedMovie, Mode=TwoWay, UpdateSourceTrigger=Default}"
+                         SelectedIndex="0"
+                         ItemTemplate="{DynamicResource MovieModelNameTemplate}"
+                         ItemContainerStyle="{StaticResource ItemStyle}">
+                </ListBox>
+            </DockPanel>
+            <Grid Grid.Column="1" Expander.Collapsed="GridCollapsed" Expander.Expanded="GridExpanded">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="MovieDetailsGrid" Margin="20,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="auto" MinHeight="40"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Style>
+                        <Style TargetType="{x:Type Grid}">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedMovie}" Value="{x:Null}">
+                                    <Setter Property="Visibility"  Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="24"/>
+                        </Style>
+                    </Grid.Resources>
+                    <StackPanel x:Name="TitleStack" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="40" Text="{Binding SelectedMovie.Title, FallbackValue=Movie Title}" />
+                        <TextBlock HorizontalAlignment="Right" Text="{Binding SelectedMovie.Year}" FontWeight="Light"/>
+                    </StackPanel>
+                    <StackPanel x:Name="PropsStack" Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1">
+                        <TextBlock HorizontalAlignment="Left" Text="Genre:" Margin="0,0,10,0" FontWeight="Bold"/>
+                        <TextBlock HorizontalAlignment="Left" Text="{Binding SelectedMovie.Genre}" Margin="0,0,10,0"/>
+                    </StackPanel>
+                    <StackPanel x:Name="PlotStack" Grid.Row="2">
+                        <TextBlock Text="Plot:" FontWeight="Bold"/>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding SelectedMovie.Plot}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <TextBlock TextWrapping="Wrap" Text="Copies:" FontWeight="Bold"/>
+                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding SelectedMovie.Copies}" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                    </StackPanel>
+                </Grid>
+                <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="2"/>
+                <Expander x:Name="Expander" Background="Beige" Grid.Column="1" IsExpanded="False" ExpandDirection="Right">
+                    <Expander.Header>
+                        <TextBlock Text="Show current rentals">
+                            <TextBlock.LayoutTransform>
+                                <RotateTransform Angle="90"/>
+                            </TextBlock.LayoutTransform>
+                        </TextBlock>
+                    </Expander.Header>
+                    <Grid x:Name="CustRentals" Grid.Row="1" MinWidth="200">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <DockPanel Margin="10">
+                            <Label Content="Rental _history:" Target="{Binding ElementName=RentHistory}" DockPanel.Dock="Top" />
+                            <ListBox x:Name="RentHistory" ItemTemplate="{DynamicResource RentedMovieHistoryTemplate}"
+                                ItemsSource="{Binding SelectedMovieRentalHistory}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
+                        </DockPanel>
+                        <DockPanel Margin="10" Grid.Row="1">
+                            <Label Content="Currently _rented:" Target="{Binding ElementName=RentCurrent}" DockPanel.Dock="Top" />
+                            <ListBox x:Name="RentCurrent" ItemTemplate="{DynamicResource RentedMovieHistoryTemplate}"
+                                ItemsSource="{Binding SelectedMovieUnreturnedMovies}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
+                        </DockPanel>
+                    </Grid>
+                </Expander>
+            </Grid>
+        </Grid>
+
+        <Border Background="#E7E7E7" BorderBrush="WhiteSmoke" BorderThickness="0,1,0,0" Margin="0,4,0,0" Grid.Row="2">
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,5,0,0">
+                <Button Content="New Movie" Click="AddMovie" Margin="0,0,5,5" Background="#50e841"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,5,5">
+                    <Button Content="Edit Details" Click="EditMovie" BorderThickness="1,1,0,1" Background="#F0D5D5"/>
+                    <Button Content="Delete" BorderThickness="0,1,1,1" Background="#D16A6A"
+                            Command="{Binding SelectedMovie.DeleteMovie}" />
+                </StackPanel>
+                <Button Content="Issue Movie" Margin="0,0,5,5" Background="#f2df33"
                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectMovieToIssue}"
                     CommandParameter="{Binding SelectedMovie}">
-                <Button.ToolTip>
-                    <ToolTip>
-                        <TextBlock Text="Customer has this movie rented, cannot rent another." />
-                    </ToolTip>
-                </Button.ToolTip>
-            </Button>
-        </StackPanel>
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock Text="Customer has this movie rented, cannot rent another." />
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+                <Button Content="Return Rented Movie" Background="#FF94C7EA"  Margin="0,0,5,5"
+                    Command="{Binding ReturnMovie}" CommandParameter="{Binding SelectedItem, ElementName=RentCurrent}">
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock Text="Select a customer to return from from the list on the right." />
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+            </WrapPanel>
+        </Border>
     </Grid>
 </UserControl>

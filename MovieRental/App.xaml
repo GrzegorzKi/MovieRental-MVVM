@@ -5,8 +5,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/Shared.xaml" />
-                <ResourceDictionary Source="/Styles/Forms.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Shared.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Forms.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

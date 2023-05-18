@@ -17,6 +17,7 @@
     <Window.Resources>
         <Style BasedOn="{StaticResource ButtonForms}" TargetType="{x:Type Button}" />
         <Style BasedOn="{StaticResource StackPanelForms}" TargetType="{x:Type StackPanel}" />
+        <Style BasedOn="{StaticResource LabelForms}" TargetType="{x:Type Label}"/>
         <Style BasedOn="{StaticResource TextBoxInError}" TargetType="{x:Type TextBox}">
             <Setter Property="Height" Value="22"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
