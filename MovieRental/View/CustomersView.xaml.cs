@@ -10,7 +10,7 @@ namespace MovieRental.View;
 public partial class CustomersView : UserControl {
     public CustomersView() {
         InitializeComponent();
-        DatabaseDao.CustomersChanged += ViewModel.RefreshCustomerList;
+        DatabaseDao.DatabaseChanged += ViewModel.RefreshCustomerList;
     }
 
     private void AddCustomer(object sender, RoutedEventArgs e) {

@@ -9,9 +9,7 @@ namespace MovieRental.Model;
 
 internal static class DatabaseDao {
 
-    public static event Action? CustomersChanged;
-    public static event Action? MoviesChanged;
-    public static event Action? MoviesRentedChanged;
+    public static event Action? DatabaseChanged;
 
     public static IEnumerable<CustomerViewModel> GetCustomerViewModels() {
         using var context = new AppDbContext();
@@ -64,7 +62,7 @@ internal static class DatabaseDao {
             context.SaveChanges();
         }
 
-        CustomersChanged?.Invoke();
+        DatabaseChanged?.Invoke();
     }
 
     public static bool DeleteCustomer(Customer customer) {
@@ -78,7 +76,7 @@ internal static class DatabaseDao {
         context.Customers.Remove(dbCustomer);
         context.SaveChanges();
 
-        CustomersChanged?.Invoke();
+        DatabaseChanged?.Invoke();
         return true;
     }
 
@@ -97,7 +95,7 @@ internal static class DatabaseDao {
             context.SaveChanges();
         }
 
-        MoviesChanged?.Invoke();
+        DatabaseChanged?.Invoke();
     }
 
     public static bool DeleteMovie(Movie movie) {
@@ -110,7 +108,7 @@ internal static class DatabaseDao {
         context.Movies.Remove(dbMovie);
         context.SaveChanges();
 
-        MoviesChanged?.Invoke();
+        DatabaseChanged?.Invoke();
         return true;
     }
 
@@ -121,9 +119,7 @@ internal static class DatabaseDao {
         context.Add(rentedMovie);
         context.SaveChanges();
 
-        CustomersChanged?.Invoke();
-        MoviesChanged?.Invoke();
-        MoviesRentedChanged?.Invoke();
+        DatabaseChanged?.Invoke();
     }
 
     public static void ReturnRentedMovie(RentedMovie rentedMovie) {
@@ -136,8 +132,6 @@ internal static class DatabaseDao {
         dbRentedMovie.DateReturned = DateTime.Now;
         context.SaveChanges();
 
-        CustomersChanged?.Invoke();
-        MoviesChanged?.Invoke();
-        MoviesRentedChanged?.Invoke();
+        DatabaseChanged?.Invoke();
     }
 }

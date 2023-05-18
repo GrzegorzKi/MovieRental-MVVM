@@ -23,11 +23,28 @@
         </Style.Triggers>
     </Style>
 
-    <DataTemplate x:Key="RentedMovieHistoryTemplate" DataType="vm:RentedMovieViewModel">
+    <DataTemplate x:Key="RentedMovieCustomerTemplate" DataType="vm:RentedMovieViewModel">
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal" Width="Auto" Margin="0,5">
                 <TextBlock Text="Rented" Margin="0,0,5,0"/>
                 <TextBlock Text="{Binding MovieTitle}" FontWeight="Bold" Margin="0"/>
+            </StackPanel>
+            <TextBlock TextWrapping="Wrap" Text="{Binding DatesInfo}" Margin="0,0,5,0"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="RentedMovieMovieTemplate" DataType="vm:RentedMovieViewModel">
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Width="Auto" Margin="0,5">
+                <TextBlock Text="Rented to" Margin="0,0,5,0"/>
+                <TextBlock FontWeight="Bold" Margin="0">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="FirstName" />
+                            <Binding Path="LastName" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
             </StackPanel>
             <TextBlock TextWrapping="Wrap" Text="{Binding DatesInfo}" Margin="0,0,5,0"/>
         </StackPanel>

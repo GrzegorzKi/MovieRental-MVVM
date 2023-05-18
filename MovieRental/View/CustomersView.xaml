@@ -96,12 +96,12 @@
                     </Grid.ColumnDefinitions>
                     <DockPanel Margin="10">
                         <Label Content="Rental _history:" Target="{Binding ElementName=RentHistory}" DockPanel.Dock="Top" />
-                        <ListBox x:Name="RentHistory" ItemTemplate="{DynamicResource RentedMovieHistoryTemplate}"
+                        <ListBox x:Name="RentHistory" ItemTemplate="{DynamicResource RentedMovieCustomerTemplate}"
                                  ItemsSource="{Binding SelectedCustomerRentalHistory}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
                     </DockPanel>
                     <DockPanel Margin="10" Grid.Column="1">
                         <Label Content="Currently _rented:" Target="{Binding ElementName=RentCurrent}" DockPanel.Dock="Top" />
-                        <ListBox x:Name="RentCurrent" ItemTemplate="{DynamicResource RentedMovieHistoryTemplate}"
+                        <ListBox x:Name="RentCurrent" ItemTemplate="{DynamicResource RentedMovieCustomerTemplate}"
                                  ItemsSource="{Binding SelectedCustomerUnreturnedMovies}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
                     </DockPanel>
                 </Grid>

@@ -19,8 +19,8 @@ public class MovieCollectionViewModel : ViewModelBase {
     public ICommand ReturnMovie => _returnMovie ??=
         new RelayCommand<RentedMovieViewModel>(ReturnMovieExecute, CanReturnMovie);
 
-    protected ObservableCollection<MovieViewModel> _movieList;
-    public ObservableCollection<MovieViewModel> MovieList {
+    protected WpfRangeObservableCollection<MovieViewModel> _movieList;
+    public WpfRangeObservableCollection<MovieViewModel> MovieList {
         get => _movieList;
         set => SetProperty(ref _movieList, value);
     }
@@ -70,7 +70,7 @@ public class MovieCollectionViewModel : ViewModelBase {
         : this(movies.Select(e => new MovieViewModel(e))) { }
 
     internal MovieCollectionViewModel(IEnumerable<MovieViewModel> movieVMs) {
-        _movieList = new ObservableCollection<MovieViewModel>(movieVMs);
+        _movieList = new WpfRangeObservableCollection<MovieViewModel>(movieVMs);
         _movieListView = new CollectionViewSource {
             Source = MovieList
         };
@@ -83,10 +83,7 @@ public class MovieCollectionViewModel : ViewModelBase {
 
     public async void RefreshMovieList() {
         var collection = await DatabaseDao.GetMovieViewModelsAsync();
-        MovieList.Clear();
-        foreach (var elem in collection) {
-            MovieList.Add(elem);
-        }
+        MovieList.ReplaceRange(collection);
     }
 
     internal void ApplyFilter(object sender, FilterEventArgs e) {
