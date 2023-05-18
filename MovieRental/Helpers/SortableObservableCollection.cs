@@ -21,7 +21,7 @@ public class SortableObservableCollection<T> : RangeObservableCollection<T> {
         Sort();
     }
 
-    internal IComparer<T>? _comparer;
+    internal new IComparer<T>? _comparer;
     public new IComparer<T> Comparer {
         get => _comparer ??= Comparer<T>.Default;
         set {

@@ -111,7 +111,7 @@
                 <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="2"/>
                 <Expander x:Name="Expander" Background="Beige" Grid.Column="1" IsExpanded="False" ExpandDirection="Right">
                     <Expander.Header>
-                        <TextBlock Text="Show current rentals">
+                        <TextBlock TextWrapping="NoWrap" Text="Show current rentals">
                             <TextBlock.LayoutTransform>
                                 <RotateTransform Angle="90"/>
                             </TextBlock.LayoutTransform>
