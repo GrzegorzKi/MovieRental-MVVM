@@ -19,6 +19,15 @@ public abstract class ViewModelBase : INotifyPropertyChanged, INotifyDataErrorIn
         if (!EqualityComparer<T>.Default.Equals(field, newValue)) {
             field = newValue;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true;
+        }
+        return false;
+    }
+
+    protected virtual bool SetPropertyValidate<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null) {
+        if (!EqualityComparer<T>.Default.Equals(field, newValue)) {
+            field = newValue;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             ValidateAsync(field, propertyName);
             return true;
         }
@@ -26,13 +35,17 @@ public abstract class ViewModelBase : INotifyPropertyChanged, INotifyDataErrorIn
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
-        ValidateAsync();
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     protected virtual void OnPropertyChangedValidate<T>(T newValue, [CallerMemberName] string? propertyName = null) {
         ValidateAsync(newValue, propertyName);
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected virtual void OnAllPropertiesChangedValidate() {
+        ValidateAsync();
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
     }
     #endregion INotifyPropertyChanged
 
@@ -54,7 +67,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged, INotifyDataErrorIn
 
             var validationResults = new List<ValidationResult>();
             var validationContext = new ValidationContext(this, null, null);
-            if (propertyName != null) {
+            if (!string.IsNullOrEmpty(propertyName)) {
                 validationContext.MemberName = propertyName;
                 Validator.TryValidateProperty(instance, validationContext, validationResults);
 

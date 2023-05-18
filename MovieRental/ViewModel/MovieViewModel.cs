@@ -68,8 +68,7 @@ public class MovieViewModel : ViewModelBase {
         set {
             if (SetProperty(ref _movieModel, value)) {
                 _rentedMovies = new ObservableCollection<RentedMovieViewModel>(_movieModel.RentedMovies.Select(e => new RentedMovieViewModel(e)));
-                // Trigger change on all properties
-                OnPropertyChanged(string.Empty);
+                OnAllPropertiesChangedValidate();
             }
         }
     }

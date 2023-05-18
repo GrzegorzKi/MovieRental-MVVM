@@ -67,8 +67,7 @@ public class CustomerViewModel : ViewModelBase {
         set {
             if (SetProperty(ref _customerModel, value)) {
                 _rentedMovies = new ObservableCollection<RentedMovieViewModel>(_customerModel.RentedMovies.Select(e => new RentedMovieViewModel(e)));
-                // Trigger change on all properties
-                OnPropertyChanged(string.Empty);
+                OnAllPropertiesChangedValidate();
             }
         }
     }
