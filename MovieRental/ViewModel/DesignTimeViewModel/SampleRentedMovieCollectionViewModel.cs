@@ -49,6 +49,6 @@ public class SampleRentedMovieCollectionViewModel : RentedMovieCollectionViewMod
             new Customer(4,"Cade","Casey","74577 Atlanta","1-724-363-8148"),
             DateTime.Now.AddDays(-7),
             DateTime.Now
-       ),
+       )
     }) { }
 }

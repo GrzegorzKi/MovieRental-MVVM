@@ -15,7 +15,7 @@ public class MovieCollectionViewModel : ViewModelBase {
     public ICommand ClearFilter => _clearFilter ??= new RelayCommand(OnClearFilter);
 
     protected WpfRangeObservableCollection<MovieViewModel> _movieList;
-    public WpfRangeObservableCollection<MovieViewModel> MovieList {
+    internal WpfRangeObservableCollection<MovieViewModel> MovieList {
         get => _movieList;
         set => SetProperty(ref _movieList, value);
     }

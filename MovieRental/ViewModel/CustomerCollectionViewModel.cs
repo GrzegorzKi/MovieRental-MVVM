@@ -15,7 +15,7 @@ public class CustomerCollectionViewModel : ViewModelBase {
     public ICommand ClearFilter => _clearFilter ??= new RelayCommand(ClearFilterExecute);
 
     protected WpfRangeObservableCollection<CustomerViewModel> _customerList;
-    public WpfRangeObservableCollection<CustomerViewModel> CustomerList {
+    internal WpfRangeObservableCollection<CustomerViewModel> CustomerList {
         get => _customerList;
         set => SetProperty(ref _customerList, value);
     }
