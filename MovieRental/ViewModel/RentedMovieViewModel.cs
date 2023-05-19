@@ -1,12 +1,19 @@
+using MovieRental.Helpers;
 using MovieRental.Model;
 using MovieRental.View.Dialogs;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows.Input;
 
 namespace MovieRental.ViewModel;
 
 public class RentedMovieViewModel : ViewModelBase {
     // TODO Might want to use IoC solution for that
     private readonly IDialogService _dialogService = new DialogService();
+
+    protected ICommand? _returnMovieCommand;
+    public ICommand ReturnMovieCommand => _returnMovieCommand ??=
+        new RelayCommand(ReturnMovieExecute, CanReturnMovie);
 
     protected RentedMovie _rentedMovieModel;
 
@@ -24,6 +31,10 @@ public class RentedMovieViewModel : ViewModelBase {
         }
     }
 
+    public bool CanReturnMovie() {
+        return DateReturned == null;
+    }
+
     public void ReturnMovieExecute() {
         var message = $"Return \"{MovieTitle}\"?\n\n" +
                 $"Rented by {FirstName} {LastName}\n" +
@@ -33,6 +44,7 @@ public class RentedMovieViewModel : ViewModelBase {
             DatabaseDao.ReturnRentedMovie(_rentedMovieModel);
         }
     }
+
 
     public int MovieId {
         get => _rentedMovieModel.MovieId;

@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Backgrounds\customer-behavior.png" />
+    <None Remove="Resources\Backgrounds\watching-a-movie.png" />
     <None Remove="Resources\Icons\clear.png" />
     <None Remove="Resources\Icons\customer.png" />
     <None Remove="Resources\Icons\missing.png" />
@@ -25,6 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Backgrounds\customer-behavior.png" />
+    <Resource Include="Resources\Backgrounds\watching-a-movie.png" />
     <Resource Include="Resources\Icons\clear.png" />
     <Resource Include="Resources\Icons\customer.png" />
     <Resource Include="Resources\Icons\missing.png" />

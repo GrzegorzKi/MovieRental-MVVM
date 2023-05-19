@@ -64,3 +64,7 @@ public class RelayCommand : ICommand {
         _execute();
     }
 }
+
+public static class GlobalCommands {
+    public static readonly ICommand NullCommand = new RelayCommand(() => { }, () => false);
+}

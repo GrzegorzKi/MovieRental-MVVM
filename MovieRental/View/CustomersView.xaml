@@ -7,7 +7,7 @@
              xmlns:dvm="clr-namespace:MovieRental.DesignTimeViewModel"
              xmlns:uc="clr-namespace:MovieRental.View.Controls"
              mc:Ignorable="d"
-             d:DesignWidth="900" d:DesignHeight="450" d:Background="White"
+             d:DesignWidth="900" d:DesignHeight="550" d:Background="White"
              d:DataContext ="{d:DesignInstance {x:Type dvm:SampleCustomerCollectionViewModel}, IsDesignTimeCreatable=True}">
     <UserControl.DataContext>
         <vm:CustomerCollectionViewModel x:Name="ViewModel" />
@@ -67,6 +67,11 @@
                     <RowDefinition MinHeight="100" MaxHeight="150"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/Resources/Backgrounds/customer-behavior.png"
+                                Stretch="None"
+                                Opacity="0.3"></ImageBrush>
+                </Grid.Background>
                 <Grid.Style>
                     <Style TargetType="{x:Type Grid}">
                         <Setter Property="Visibility" Value="Visible" />
@@ -96,13 +101,16 @@
                     </Grid.ColumnDefinitions>
                     <DockPanel Margin="10">
                         <Label Content="Rental _history:" Target="{Binding ElementName=RentHistory}" DockPanel.Dock="Top" />
-                        <ListBox x:Name="RentHistory" ItemTemplate="{DynamicResource RentedMovieCustomerTemplate}"
+                        <ListBox x:Name="RentHistory" Background="#99FFFFFF"
+                                 ItemTemplate="{DynamicResource RentedMovieCustomerTemplate}"
                                  ItemsSource="{Binding SelectedCustomerRentalHistory}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
                     </DockPanel>
                     <DockPanel Margin="10" Grid.Column="1">
                         <Label Content="Currently _rented:" Target="{Binding ElementName=RentCurrent}" DockPanel.Dock="Top" />
-                        <ListBox x:Name="RentCurrent" ItemTemplate="{DynamicResource RentedMovieCustomerTemplate}"
-                                 ItemsSource="{Binding SelectedCustomerUnreturnedMovies}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
+                        <ListBox x:Name="RentCurrent" Background="#99FFFFFF"
+                                 SelectedItem="{Binding SelectedRentedMovie}"
+                                 ItemTemplate="{DynamicResource RentedMovieCustomerTemplate}"
+                                 ItemsSource="{Binding SelectedCustomerUnreturnedMovies}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}" />
                     </DockPanel>
                 </Grid>
             </Grid>
@@ -116,8 +124,8 @@
                     <Button Content="Delete" Click="DeleteCustomer" BorderThickness="0,1,1,1" Background="#D16A6A"/>
                 </StackPanel>
                 <Button Content="Issue Movie" Margin="0,0,5,5" Background="#f2df33"
-                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectCustomerToIssue}"
-                    CommandParameter="{Binding SelectedCustomer}">
+                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectCustomerToIssue}"
+                        CommandParameter="{Binding SelectedCustomer}">
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock Text="Customer has this movie rented, cannot rent another." />
@@ -125,7 +133,7 @@
                     </Button.ToolTip>
                 </Button>
                 <Button Content="Return Rented Movie" Background="#FF94C7EA"  Margin="0,0,5,5"
-                    Command="{Binding ReturnMovie}" CommandParameter="{Binding SelectedItem, ElementName=RentCurrent}">
+                        Command="{Binding SelectedRentedMovie.ReturnMovieCommand, FallbackValue={StaticResource NullCommand}}" >
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock Text="Select a movie to return from the list on the right." />

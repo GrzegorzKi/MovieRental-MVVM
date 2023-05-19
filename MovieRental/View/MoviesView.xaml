@@ -7,7 +7,7 @@
              xmlns:dvm="clr-namespace:MovieRental.DesignTimeViewModel"
              xmlns:uc="clr-namespace:MovieRental.View.Controls"
              mc:Ignorable="d"
-             d:DesignWidth="800" d:DesignHeight="400" d:Background="White"
+             d:DesignWidth="900" d:DesignHeight="550" d:Background="White"
              d:DataContext="{d:DesignInstance d:Type=dvm:SampleMovieCollectionViewModel, IsDesignTimeCreatable=True}">
     <UserControl.DataContext>
         <vm:MovieCollectionViewModel x:Name="ViewModel" />
@@ -66,9 +66,15 @@
             </DockPanel>
             <Grid Grid.Column="1" Expander.Collapsed="GridCollapsed" Expander.Expanded="GridExpanded">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" MinWidth="100"/>
                     <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto"  MinWidth="24"/>
                 </Grid.ColumnDefinitions>
+                <Grid.Background>
+                    <ImageBrush ImageSource="/Resources/Backgrounds/watching-a-movie.png"
+                                Stretch="None"
+                                Opacity="0.3"></ImageBrush>
+                </Grid.Background>
                 <Grid x:Name="MovieDetailsGrid" Margin="20,10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="100"/>
@@ -108,8 +114,8 @@
                         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding SelectedMovie.Copies}" VerticalAlignment="Top" Margin="10,0,0,0"/>
                     </StackPanel>
                 </Grid>
-                <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="2"/>
-                <Expander x:Name="Expander" Background="Beige" Grid.Column="1" IsExpanded="False" ExpandDirection="Right">
+                <GridSplitter HorizontalAlignment="Stretch" Width="2" Opacity="0" Grid.Column="1"/>
+                <Expander x:Name="Expander" Background="#99f5f5dc" IsExpanded="False" ExpandDirection="Right" Grid.Column="2">
                     <Expander.Header>
                         <TextBlock TextWrapping="NoWrap" Text="Show current rentals">
                             <TextBlock.LayoutTransform>
@@ -124,13 +130,16 @@
                         </Grid.RowDefinitions>
                         <DockPanel Margin="10">
                             <Label Content="Rental _history:" Target="{Binding ElementName=RentHistory}" DockPanel.Dock="Top" />
-                            <ListBox x:Name="RentHistory" ItemTemplate="{DynamicResource RentedMovieMovieTemplate}"
-                                ItemsSource="{Binding SelectedMovieRentalHistory}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
+                            <ListBox x:Name="RentHistory" Background="#99FFFFFF"
+                                     ItemTemplate="{DynamicResource RentedMovieMovieTemplate}"
+                                     ItemsSource="{Binding SelectedMovieRentalHistory}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
                         </DockPanel>
                         <DockPanel Margin="10" Grid.Row="1">
                             <Label Content="Currently _rented:" Target="{Binding ElementName=RentCurrent}" DockPanel.Dock="Top" />
-                            <ListBox x:Name="RentCurrent" ItemTemplate="{DynamicResource RentedMovieMovieTemplate}"
-                                ItemsSource="{Binding SelectedMovieUnreturnedMovies}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                            <ListBox x:Name="RentCurrent" Background="#99FFFFFF"
+                                     ItemTemplate="{DynamicResource RentedMovieMovieTemplate}"
+                                     SelectedItem="{Binding SelectedRentedMovie}"
+                                     ItemsSource="{Binding SelectedMovieUnreturnedMovies}" ItemContainerStyle="{StaticResource RentedMovieItemStyle}"/>
                         </DockPanel>
                     </Grid>
                 </Expander>
@@ -143,22 +152,22 @@
                 <StackPanel Orientation="Horizontal" Margin="0,0,5,5">
                     <Button Content="Edit Details" Click="EditMovie" BorderThickness="1,1,0,1" Background="#F0D5D5"/>
                     <Button Content="Delete" BorderThickness="0,1,1,1" Background="#D16A6A"
-                            Command="{Binding SelectedMovie.DeleteMovie}" />
+                            Command="{Binding SelectedMovie.DeleteMovie}"/>
                 </StackPanel>
                 <Button Content="Issue Movie" Margin="0,0,5,5" Background="#f2df33"
-                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectMovieToIssue}"
-                    CommandParameter="{Binding SelectedMovie}">
+                        Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.SelectMovieToIssue}"
+                        CommandParameter="{Binding SelectedMovie}">
                     <Button.ToolTip>
                         <ToolTip>
-                            <TextBlock Text="Customer has this movie rented, cannot rent another." />
+                            <TextBlock Text="Customer has this movie rented, cannot rent another."/>
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>
                 <Button Content="Return Rented Movie" Background="#FF94C7EA"  Margin="0,0,5,5"
-                    Command="{Binding ReturnMovie}" CommandParameter="{Binding SelectedItem, ElementName=RentCurrent}">
+                        Command="{Binding SelectedRentedMovie.ReturnMovieCommand, FallbackValue={StaticResource NullCommand}}">
                     <Button.ToolTip>
                         <ToolTip>
-                            <TextBlock Text="Select a customer to return from from the list on the right." />
+                            <TextBlock Text="Select a customer to return from from the list on the right."/>
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>

@@ -1,6 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:vm="clr-namespace:MovieRental.ViewModel">
+                    xmlns:vm="clr-namespace:MovieRental.ViewModel"
+                    xmlns:h="clr-namespace:MovieRental.Helpers">
+
+    <x:Static Member="h:GlobalCommands.NullCommand" x:Key="NullCommand"/>
 
     <ControlTemplate x:Key="ValidationTemplate">
         <StackPanel>

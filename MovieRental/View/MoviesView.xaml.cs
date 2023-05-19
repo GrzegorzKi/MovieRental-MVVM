@@ -55,14 +55,14 @@ public partial class MoviesView : UserControl {
 
     private void GridCollapsed(object sender, RoutedEventArgs e) {
         if (sender is Grid grid) {
-            _rememberWidth = grid.ColumnDefinitions[1].Width;
-            grid.ColumnDefinitions[1].Width = GridLength.Auto;
+            _rememberWidth = grid.ColumnDefinitions[2].Width;
+            grid.ColumnDefinitions[2].Width = GridLength.Auto;
         }
     }
 
     private void GridExpanded(object sender, RoutedEventArgs e) {
         if (sender is Grid grid) {
-            grid.ColumnDefinitions[1].Width = _rememberWidth;
+            grid.ColumnDefinitions[2].Width = _rememberWidth;
         }
     }
 }

@@ -3,7 +3,6 @@ using MovieRental.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -14,10 +13,6 @@ public class MovieCollectionViewModel : ViewModelBase {
 
     protected ICommand? _clearFilter;
     public ICommand ClearFilter => _clearFilter ??= new RelayCommand(OnClearFilter);
-
-    protected ICommand? _returnMovie;
-    public ICommand ReturnMovie => _returnMovie ??=
-        new RelayCommand<RentedMovieViewModel>(ReturnMovieExecute, CanReturnMovie);
 
     protected WpfRangeObservableCollection<MovieViewModel> _movieList;
     public WpfRangeObservableCollection<MovieViewModel> MovieList {
@@ -32,6 +27,7 @@ public class MovieCollectionViewModel : ViewModelBase {
         get => _selectedMovie;
         set {
             if (SetProperty(ref _selectedMovie, value)) {
+                SelectedRentedMovie = null;
                 SelectedMovieRentalHistory = _selectedMovie?.RentedMovies ?? new ObservableCollection<RentedMovieViewModel>();
             }
         }
@@ -51,6 +47,12 @@ public class MovieCollectionViewModel : ViewModelBase {
     protected CollectionViewSource _selectedMovieUnreturnedMoviesView;
     public ICollectionView SelectedMovieUnreturnedMovies {
         get => _selectedMovieUnreturnedMoviesView.View;
+    }
+
+    protected RentedMovieViewModel? _selectedRentedMovie;
+    public RentedMovieViewModel? SelectedRentedMovie {
+        get => _selectedRentedMovie;
+        set => SetProperty(ref _selectedRentedMovie, value);
     }
 
     protected string _filter = string.Empty;
@@ -98,16 +100,6 @@ public class MovieCollectionViewModel : ViewModelBase {
 
     public void OnClearFilter() {
         Filter = string.Empty;
-    }
-
-    public bool CanReturnMovie([NotNullWhen(true)] RentedMovieViewModel? rentedMovieVM) {
-        return rentedMovieVM != null && rentedMovieVM.DateReturned == null;
-    }
-
-    public void ReturnMovieExecute(RentedMovieViewModel? rentedMovieVM) {
-        if (CanReturnMovie(rentedMovieVM)) {
-            rentedMovieVM.ReturnMovieExecute();
-        }
     }
 
     internal void FilterUnreturnedMovie(object sender, FilterEventArgs e) {
