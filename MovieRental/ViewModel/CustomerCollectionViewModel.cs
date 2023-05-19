@@ -67,7 +67,9 @@ public class CustomerCollectionViewModel : ViewModelBase {
 
 
     public CustomerCollectionViewModel()
-        : this(DatabaseDao.GetCustomerViewModels()) { }
+        : this(DatabaseDao.GetCustomerViewModels()) {
+        DatabaseDao.DatabaseChanged += RefreshCustomerList;
+    }
 
     internal CustomerCollectionViewModel(IEnumerable<Customer> customers)
         : this(customers.Select(e => new CustomerViewModel(e))) { }

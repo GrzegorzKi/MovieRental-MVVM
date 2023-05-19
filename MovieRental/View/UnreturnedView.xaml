@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MovieRental.View"
+             xmlns:uc="clr-namespace:MovieRental.View.Controls"
              xmlns:vm="clr-namespace:MovieRental.ViewModel"
              xmlns:dvm="clr-namespace:MovieRental.DesignTimeViewModel"
              mc:Ignorable="d"
@@ -30,9 +31,11 @@
         </Grid.Background>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
             <StackPanel x:Name="RentalStack">
-                <Label Target="{Binding ElementName=RentedMovies}" Content="_Unreturned movies" FontSize="16"/>
+                <Label Padding="0,4" Target="{Binding ElementName=RentedMovies}" Content="_Unreturned movies" FontSize="16"/>
+                <uc:Searchbar Height="30" FilterText="{Binding Filter, Mode=TwoWay}" ClearFilterCommand="{Binding ClearFilter}" />
                 <DataGrid x:Name="RentedMovies" AutoGenerateColumns="False"
-                          IsReadOnly="True" SelectionMode="Single" 
+                          IsReadOnly="True" SelectionMode="Single"
+                          SelectedItem="{Binding SelectedUnreturnedRentedMovie}"
                           ItemsSource="{Binding UnreturnedMovies}" >
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding MovieTitle}" Width="2*" Header="Movie Title"/>
@@ -42,14 +45,14 @@
                         <DataGridTextColumn Binding="{Binding DateIssued, Converter={StaticResource DaysPassedConverter}}" Header="Duration"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Expander VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,10,0,0">
+                <Expander VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="0,10,0,0">
                     <Expander.Header>
-                        <Label Target="{Binding ElementName=AllRentalHistory}" Content="_All Rental History" FontSize="16" Padding="0"/>
+                        <Label Target="{Binding ElementName=AllRentalHistory}" Content="_All Rental History" FontSize="16" Padding="0,4"/>
                     </Expander.Header>
-                    <Grid Margin="0,5,0,0">
+                    <Grid>
                         <DataGrid x:Name="AllRentalHistory" AutoGenerateColumns="False"
                                   IsReadOnly="True" SelectionMode="Single"
-                                  ItemsSource="{Binding RentedMoviesList}">
+                                  ItemsSource="{Binding RentedMoviesListView}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding MovieTitle}" Width="2*" Header="Movie Title"/>
                                 <DataGridTextColumn Binding="{Binding FirstName}" Width="1*" Header="Name"/>
@@ -67,12 +70,14 @@
             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,5,0,0">
                 <StackPanel Orientation="Horizontal" Margin="0,0,5,5">
                     <Button Content="Navigate to movie" BorderThickness="1,1,0,1" Background="#94CFEA"
-                            Command="{x:Null}"/>
+                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.FindMovieInList}"
+                            CommandParameter="{Binding SelectedUnreturnedRentedMovie.MovieId, FallbackValue={x:Null}}"/>
                     <Button Content="Navigate to customer" BorderThickness="0,1,1,1" Background="#A8EE9F"
-                            Command="{x:Null}"/>
+                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.FindCustomerInList}"
+                            CommandParameter="{Binding SelectedUnreturnedRentedMovie.CustomerId, FallbackValue={x:Null}}"/>
                 </StackPanel>
                 <Button Content="Return Rented Movie" Background="#FF94C7EA"  Margin="0,0,5,5"
-                        Command="{x:Null}">
+                        Command="{Binding SelectedUnreturnedRentedMovie.ReturnMovieCommand, FallbackValue={StaticResource NullCommand}}">
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock Text="Select a movie to return from the list on the right."/>

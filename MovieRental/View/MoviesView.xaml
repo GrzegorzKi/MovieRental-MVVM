@@ -72,8 +72,7 @@
                 </Grid.ColumnDefinitions>
                 <Grid.Background>
                     <ImageBrush ImageSource="/Resources/Backgrounds/watching-a-movie.png"
-                                Stretch="None"
-                                Opacity="0.3"></ImageBrush>
+                                Stretch="None" Opacity="0.3"/>
                 </Grid.Background>
                 <Grid x:Name="MovieDetailsGrid" Margin="20,10">
                     <Grid.RowDefinitions>
@@ -167,7 +166,7 @@
                         Command="{Binding SelectedRentedMovie.ReturnMovieCommand, FallbackValue={StaticResource NullCommand}}">
                     <Button.ToolTip>
                         <ToolTip>
-                            <TextBlock Text="Select a customer to return from from the list on the right."/>
+                            <TextBlock Text="Select a customer to return movie from from the list on the right."/>
                         </ToolTip>
                     </Button.ToolTip>
                 </Button>

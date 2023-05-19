@@ -66,7 +66,9 @@ public class MovieCollectionViewModel : ViewModelBase {
     }
 
     public MovieCollectionViewModel()
-        : this(DatabaseDao.GetMovieViewModels()) { }
+        : this(DatabaseDao.GetMovieViewModels()) {
+        DatabaseDao.DatabaseChanged += RefreshMovieList;
+    }
 
     internal MovieCollectionViewModel(IEnumerable<Movie> movies)
         : this(movies.Select(e => new MovieViewModel(e))) { }

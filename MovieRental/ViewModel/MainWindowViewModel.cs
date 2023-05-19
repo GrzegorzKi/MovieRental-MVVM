@@ -22,11 +22,11 @@ public class MainWindowViewModel : ViewModelBase {
 
     private ICommand? _findCustomerInList;
     public ICommand FindCustomerInList => _findCustomerInList ??=
-        new RelayCommand<int?>(CustomerTabSwitchRequested!);
+        new RelayCommand<int?>(CustomerTabSwitchRequested!, e => e is not null);
 
     private ICommand? _findMovieInList;
     public ICommand FindMovieInList => _findMovieInList ??=
-        new RelayCommand<int?>(MovieTabSwitchRequested!);
+        new RelayCommand<int?>(MovieTabSwitchRequested!, e => e is not null);
 
     private readonly IDialogService _dialogService;
 

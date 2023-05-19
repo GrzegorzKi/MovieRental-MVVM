@@ -14,7 +14,7 @@ public class RentedMovieCollectionViewModel : ViewModelBase {
     public ICommand ClearFilter => _clearFilter ??= new RelayCommand(ClearFilterExecute);
 
     protected WpfRangeObservableCollection<RentedMovieViewModel> _rentedMoviesList;
-    public WpfRangeObservableCollection<RentedMovieViewModel> RentedMoviesList {
+    protected WpfRangeObservableCollection<RentedMovieViewModel> RentedMoviesList {
         get => _rentedMoviesList;
         set => SetProperty(ref _rentedMoviesList, value);
     }

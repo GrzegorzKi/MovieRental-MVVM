@@ -1,4 +1,3 @@
-using MovieRental.Model;
 using MovieRental.View.Modals;
 using MovieRental.ViewModel;
 using System.Windows;
@@ -10,7 +9,6 @@ namespace MovieRental.View;
 public partial class CustomersView : UserControl {
     public CustomersView() {
         InitializeComponent();
-        DatabaseDao.DatabaseChanged += ViewModel.RefreshCustomerList;
     }
 
     private void AddCustomer(object sender, RoutedEventArgs e) {
