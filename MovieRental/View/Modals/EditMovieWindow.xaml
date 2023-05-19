@@ -10,7 +10,7 @@
         Title="Movie Info"
         WindowStartupLocation="CenterOwner"
         SizeToContent="Height"
-        ResizeMode="NoResize" Width="500">
+        ResizeMode="NoResize" Width="500" Icon="/Resources/Icons/rental.ico">
     <Window.DataContext>
         <vm:MovieViewModel x:Name="ViewModel" />
     </Window.DataContext>

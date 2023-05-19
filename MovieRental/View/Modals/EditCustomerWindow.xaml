@@ -10,7 +10,7 @@
         Title="Customer Details"
         WindowStartupLocation="CenterOwner"
         SizeToContent="Height"
-        Width="220" ResizeMode="NoResize">
+        Width="220" ResizeMode="NoResize" Icon="/Resources/Icons/rental.ico">
     <Window.DataContext>
         <vm:CustomerViewModel x:Name="ViewModel" />
     </Window.DataContext>

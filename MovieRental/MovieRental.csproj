@@ -15,6 +15,7 @@
     <None Remove="Resources\Icons\customer.png" />
     <None Remove="Resources\Icons\missing.png" />
     <None Remove="Resources\Icons\movie.png" />
+    <None Remove="Resources\Icons\rental.ico" />
     <None Remove="Resources\Icons\search.png" />
   </ItemGroup>
 
@@ -35,6 +36,7 @@
     <Resource Include="Resources\Icons\customer.png" />
     <Resource Include="Resources\Icons\missing.png" />
     <Resource Include="Resources\Icons\movie.png" />
+    <Resource Include="Resources\Icons\rental.ico" />
     <Resource Include="Resources\Icons\search.png" />
   </ItemGroup>
 
