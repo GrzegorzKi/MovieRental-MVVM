@@ -47,6 +47,24 @@ internal static class DatabaseDao {
             .Select(e => new MovieViewModel(e)).ToListAsync();
     }
 
+    public static IEnumerable<RentedMovieViewModel> GetRentedMovieViewModels() {
+        using var context = new AppDbContext();
+
+        return context.RentedMovies
+            .Include(p => p.Customer)
+            .Include(m => m.Movie)
+            .Select(e => new RentedMovieViewModel(e)).ToList();
+    }
+
+    public static async Task<IEnumerable<RentedMovieViewModel>> GetRentedMovieViewModelsAsync() {
+        using var context = new AppDbContext();
+
+        return await context.RentedMovies
+            .Include(p => p.Customer)
+            .Include(m => m.Movie)
+            .Select(e => new RentedMovieViewModel(e)).ToListAsync();
+    }
+
     public static void UpdateCustomer(Customer customer) {
         using var context = new AppDbContext();
 

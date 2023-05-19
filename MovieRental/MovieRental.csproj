@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Resources\Backgrounds\customer-behavior.png" />
+    <None Remove="Resources\Backgrounds\replacement.png" />
     <None Remove="Resources\Backgrounds\watching-a-movie.png" />
     <None Remove="Resources\Icons\clear.png" />
     <None Remove="Resources\Icons\customer.png" />
@@ -28,6 +29,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\Backgrounds\customer-behavior.png" />
+    <Resource Include="Resources\Backgrounds\replacement.png" />
     <Resource Include="Resources\Backgrounds\watching-a-movie.png" />
     <Resource Include="Resources\Icons\clear.png" />
     <Resource Include="Resources\Icons\customer.png" />

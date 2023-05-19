@@ -4,9 +4,82 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MovieRental.View"
+             xmlns:vm="clr-namespace:MovieRental.ViewModel"
+             xmlns:dvm="clr-namespace:MovieRental.DesignTimeViewModel"
              mc:Ignorable="d"
+             d:DataContext ="{d:DesignInstance {x:Type dvm:SampleRentedMovieCollectionViewModel}, IsDesignTimeCreatable=True}"
              d:DesignWidth="900" d:DesignHeight="550" d:Background="White">
-    <Grid>
+    <UserControl.DataContext>
+        <vm:RentedMovieCollectionViewModel x:Name="ViewModel" />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="8,4"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid x:Name="UnreturnedGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Resources/Backgrounds/replacement.png"
+                        Stretch="None"
+                        Opacity="0.3"/>
+        </Grid.Background>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+            <StackPanel x:Name="RentalStack">
+                <Label Target="{Binding ElementName=RentedMovies}" Content="_Unreturned movies" FontSize="16"/>
+                <DataGrid x:Name="RentedMovies" AutoGenerateColumns="False"
+                          IsReadOnly="True" SelectionMode="Single" 
+                          ItemsSource="{Binding UnreturnedMovies}" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding MovieTitle}" Width="2*" Header="Movie Title"/>
+                        <DataGridTextColumn Binding="{Binding FirstName}" Width="1*" Header="Name"/>
+                        <DataGridTextColumn Binding="{Binding LastName}" Width="1*" Header="Surname"/>
+                        <DataGridTextColumn Binding="{Binding DateIssued, StringFormat=\{0:d\}}" Width="1*" Header="Date Issued"/>
+                        <DataGridTextColumn Binding="{Binding DateIssued, Converter={StaticResource DaysPassedConverter}}" Header="Duration"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Expander VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,10,0,0">
+                    <Expander.Header>
+                        <Label Target="{Binding ElementName=AllRentalHistory}" Content="_All Rental History" FontSize="16" Padding="0"/>
+                    </Expander.Header>
+                    <Grid Margin="0,5,0,0">
+                        <DataGrid x:Name="AllRentalHistory" AutoGenerateColumns="False"
+                                  IsReadOnly="True" SelectionMode="Single"
+                                  ItemsSource="{Binding RentedMoviesList}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding MovieTitle}" Width="2*" Header="Movie Title"/>
+                                <DataGridTextColumn Binding="{Binding FirstName}" Width="1*" Header="Name"/>
+                                <DataGridTextColumn Binding="{Binding LastName}" Width="1*" Header="Surname"/>
+                                <DataGridTextColumn Binding="{Binding DateIssued, StringFormat=\{0:d\}}" Width="1*" Header="Date Issued"/>
+                                <DataGridTextColumn Binding="{Binding DateReturned, StringFormat=\{0:d\}, FallbackValue={x:Null}}" Width="1*" Header="Date Returned"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Expander>
+            </StackPanel>
             
+        </ScrollViewer>
+        <Border Background="#E7E7E7" BorderBrush="WhiteSmoke" BorderThickness="0,1,0,0" Margin="0,4,0,0" Grid.Row="1">
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,5,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,0,5,5">
+                    <Button Content="Navigate to movie" BorderThickness="1,1,0,1" Background="#94CFEA"
+                            Command="{x:Null}"/>
+                    <Button Content="Navigate to customer" BorderThickness="0,1,1,1" Background="#A8EE9F"
+                            Command="{x:Null}"/>
+                </StackPanel>
+                <Button Content="Return Rented Movie" Background="#FF94C7EA"  Margin="0,0,5,5"
+                        Command="{x:Null}">
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock Text="Select a movie to return from the list on the right."/>
+                        </ToolTip>
+                    </Button.ToolTip>
+                </Button>
+            </WrapPanel>
+        </Border>
     </Grid>
 </UserControl>

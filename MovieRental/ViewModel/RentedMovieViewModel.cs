@@ -2,7 +2,6 @@ using MovieRental.Helpers;
 using MovieRental.Model;
 using MovieRental.View.Dialogs;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 
 namespace MovieRental.ViewModel;
