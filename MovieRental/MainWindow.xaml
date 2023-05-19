@@ -8,7 +8,7 @@
         xmlns:uc="clr-namespace:MovieRental.View.Controls"
         xmlns:view="clr-namespace:MovieRental.View"
         mc:Ignorable="d"
-        Title="Movie Rental 2.0" Width="900" Height="600">
+        Title="Movie Rental++" Width="900" Height="600">
     <Window.DataContext>
         <vm:MainWindowViewModel x:Name="ViewModel" />
     </Window.DataContext>
