@@ -60,7 +60,7 @@ here: https://dotnet.microsoft.com/en-us/download.
 5. Move created DB file to output folder *or* change connection string in
    `MovieRental.dll.config` after build to point to correct DB file
 
-**NOTE:** Migrations contains code that adds example movies, customers and
+**NOTE:** Migrations contain code that adds example movies, customers and
 rented movies, to showcase application's capabilities. If you don't want
 to apply such data, remove `20230519132312_SeedExampleData.cs` and its designer
 file and references in `AppDbContext.cs` to SeedData class under `Model` folder.
@@ -70,13 +70,14 @@ file and references in `AppDbContext.cs` to SeedData class under `Model` folder.
 
 * Code-behind was not fully eliminated from the project despite best efforts.
   Some stuff would require big hacks in order to remove it and keep current
-  functionality intact.
+  functionality intact.  
 * ViewModels themselves show some confirmation dialogs, which is against MVVM
-  pattern (making it VM-independent would produce much more code)
+  pattern (making it VM-independent would produce much more code).
 * With that (and some other things), the code-base IS NOT 100%
   MVVM-pattern-compliant.  Just keep that in mind, as they say: one does not
   simply create MVVM application.
 * Data in ViewModels are reloaded in full when anything in database changes.
+  The indended behaviour would be to change collection in VMs themselves.
   This might be both easy and difficult to solve - unfortunately, I haven't
   found a feasible solution myself.
 * The code doesn't have exception handling except for a global one for
@@ -98,5 +99,3 @@ It is quite unlikely I will come back to the project to change anything in it,
 nor address potential issues.  Nonetheless, if you have spotted a bug or have
 some ideas how to improve the code, please submit an issue using the Issues tab
 above.  This might help other fellas when they face similar issues!
-
-
